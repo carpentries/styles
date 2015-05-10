@@ -1,44 +1,44 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version 16322c026d0e5b6e9953e12362ca665d5d09304e .
+  It has been generated from version 1a1bfd6d7e43e7b46d2ef919e6922d9ac51b2639 .
   It includes:
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck/extensions/includedeck/load.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//jquery.min.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//modernizr.custom.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//core/deck.core.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/smarkdown/markdown.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/smarkdown/deck.smarkdown.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/fit/deck.fit.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//libs/display-latex2.user.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/simplemath/deck.simplemath.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/clone/deck.clone.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/goto/deck.goto.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/progress/deck.progress.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/navigation/deck.navigation.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/menu/deck.menu.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/step/deck.step.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/events/deck.events.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/anim/deck.anim.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//libs/jquerysvg/jquery.svg.min.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//libs/jquerysvg/jquery.svganim.min.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/svg/deck.svg.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/metadata/deck.metadata.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/attribution/deck.attribution.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/container-styling/deck.container-styling.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/timekeeper/deck.timekeeper.js
+     ..../extensions/includedeck/load.js
+     ..../jquery.min.js
+     ..../modernizr.custom.js
+     ..../core/deck.core.js
+     ..../extensions/smarkdown/markdown.js
+     ..../extensions/smarkdown/deck.smarkdown.js
+     ..../extensions/fit/deck.fit.js
+     ..../libs/display-latex2.user.js
+     ..../extensions/simplemath/deck.simplemath.js
+     ..../extensions/clone/deck.clone.js
+     ..../extensions/goto/deck.goto.js
+     ..../extensions/progress/deck.progress.js
+     ..../extensions/navigation/deck.navigation.js
+     ..../extensions/menu/deck.menu.js
+     ..../extensions/step/deck.step.js
+     ..../extensions/events/deck.events.js
+     ..../extensions/anim/deck.anim.js
+     ..../libs/jquerysvg/jquery.svg.min.js
+     ..../libs/jquerysvg/jquery.svganim.min.js
+     ..../extensions/svg/deck.svg.js
+     ..../extensions/metadata/deck.metadata.js
+     ..../extensions/attribution/deck.attribution.js
+     ..../extensions/container-styling/deck.container-styling.js
+     ..../extensions/timekeeper/deck.timekeeper.js
      browsercast/popcorn.js
      browsercast/deck.browsercast.js
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/style-chunks/core.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/fit/deck.fit-fs.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/clone/deck.clone.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/goto/deck.goto.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/progress/deck.progress.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/navigation/deck.navigation.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/menu/deck.menu.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/attribution/deck.attribution.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/timekeeper/deck.timekeeper.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/style-chunks/simple.css
-     /home/twilight/projects/deck.browsercast.js-demo/tmpdeck//extensions/style-chunks/comments.css
+     ..../extensions/style-chunks/core.css
+     ..../extensions/fit/deck.fit-fs.css
+     ..../extensions/clone/deck.clone.css
+     ..../extensions/goto/deck.goto.css
+     ..../extensions/progress/deck.progress.css
+     ..../extensions/navigation/deck.navigation.css
+     ..../extensions/menu/deck.menu.css
+     ..../extensions/attribution/deck.attribution.css
+     ..../extensions/timekeeper/deck.timekeeper.css
+     ..../extensions/style-chunks/simple.css
+     ..../extensions/style-chunks/comments.css
      browsercast/deck.browsercast.css
      browsercast/player.css
 */
@@ -511,6 +511,11 @@ that use the API provided by core.
     ].join(', ');
 
     $document.unbind('keydown.deck').bind('keydown.deck', function(event) {
+      if (event.altKey) {
+        // ignore events when the ALT key is down
+        // NB: browsers use ALT+arrow to navigate history
+        return;
+      }
       var isNext = event.which === options.keys.next;
       var isPrev = event.which === options.keys.previous;
       isNext = isNext || $.inArray(event.which, options.keys.next) > -1;
@@ -10526,4 +10531,934 @@ It also injects some default html for it if none is found (and styles it for the
     });
 
 })(window, window.document, jQuery, 'deck', this);
-function ACTUALLY_FILL_CSS(el) { $(el).text("\n.deck-container {\n  position: relative;\n  overflow: hidden;\n  margin: 0;\n}\n\n.deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide:not(.deck-current), .deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide:not(.deck-child-current) {\n  display: none;\n}\n.deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide.deck-current, .deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide.deck-child-current {\n  display: block;\n}\n\n.deck-container.deck-loading > *:not(.deck-loading-splash) {\n  visibility: hidden;\n}\n.touch .deck-container {\n  -webkit-text-size-adjust: none;\n  -moz-text-size-adjust: none;\n}\n.deck-container > .slide {\n  position: absolute;\n}\n.deck-container > .slide.deck-current, .deck-container > .slide.deck-child-current {\n  position: absolute;\n  /* relative to parent */\n}\n.deck-container > .slide.deck-current .slide, .deck-container > .slide.deck-child-current .slide {\n  visibility: hidden;\n}\n.deck-container > .slide.deck-current .deck-previous, .deck-container > .slide.deck-current .deck-before, .deck-container > .slide.deck-current .deck-current, .deck-container > .slide.deck-child-current .deck-previous, .deck-container > .slide.deck-child-current .deck-before, .deck-container > .slide.deck-child-current .deck-current {\n  visibility: visible;\n}\n.deck-container.deck-anim-ready .deck-loading-splash {\n  visibility: hidden;\n  opacity: 0;\n  /*\n      right: 100%;\n      left: -100%;\n  */\n  -webkit-transition: visibility 0s linear 0.5s, all 0.5s linear;\n  transition: visibility 0s linear .5s, all 0.5s linear;\n}\n.deck-container .deck-loading-splash {\n  visibility: visible;\n  opacity: 1;\n  position: absolute;\n  text-align: center;\n  padding-top: 200px;\n  display: flex;\n  margin: 0 auto;\n  left: 0;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  background: black;\n  color: white;\n  z-index: 100;\n}\n\n\n.deck-container {\n    width: 100%; height: 100%; /* to get a proper filling of the parent */\n    margin: 0; padding: 0; /* any margin is handled by the parent or the fit extension */\n    position: absolute;\n    left:0; top:0; width:100%; height:100%;\n    border: 0;\n}\n.deck-container>.slide {\n    width: 100%; height: 100%; /* to get a proper filling of the parent */\n    min-width:0; min-height:0; /* undoing some hurting style in the defaults of deck.js */\n    overflow: hidden; /* don't show slides outside of their box */\n    /* margin:0; padding:0; /* remove possible margins */\n}\n\nbody.is-clone .clonepointer {\n  /* default convenient positioning for clone pointers */\n  position: absolute;\n  z-index: 10; }\n  body.is-clone .clonepointer.scale-on-click {\n    transition: transform 80ms linear;\n    -webkit-transition: -webkit-transform 80ms linear; }\n    body.is-clone .clonepointer.scale-on-click.pointer-click {\n      transition: transform 150ms linear;\n      -webkit-transition: -webkit-transform 150ms linear;\n      transform: translate(-50%, -50%) scale(1.5, 1.5) translate(50%, 50%);\n      -webkit-transform: translate(-50%, -50%) scale(1.5, 1.5) translate(50%, 50%); }\n\n.notes, .notes-target {\n  display: none; }\n\nbody.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-current, body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-child-current {\n  outline: 5px solid grey;\n  /* use outline to avoid layout issues with old themes and allow for precise pointer position estimation */\n  overflow: hidden;\n  left: 0;\n  top: 0;\n  transform: translate(20px, 20px);\n  -webkit-transform: translate(20px, 20px); }\n  body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-current + .slide, body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-child-current + .slide {\n    outline: 5px solid grey;\n    overflow: hidden;\n    display: block !important;\n    visibility: visible;\n    top: 0;\n    left: 0;\n    transform: translate(-50%, -50%) scale(0.5) translate(50%, 50%) translate(200%, 0) translate(80px, 40px);\n    -webkit-transform: translate(-50%, -50%) scale(0.5) translate(50%, 50%) translate(200%, 0) translate(80px, 40px); }\n    body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-current + .slide.deck-next, body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-child-current + .slide.deck-next {\n      outline-color: red; }\nbody.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) .notes-target {\n  display: block;\n  background: black;\n  color: #FFB;\n  padding: 5px;\n  position: absolute;\n  left: 840px;\n  right: 0;\n  top: 340px;\n  bottom: 0; }\n\n.goto-form {\n  position: absolute;\n  z-index: 3;\n  bottom: 10px;\n  left: 50%;\n  height: 1.75em;\n  margin: 0 0 0 -9.125em;\n  line-height: 1.75em;\n  padding: 0.625em;\n  display: none;\n  background: #ccc;\n  overflow: hidden;\n  border-radius: 10px;\n}\n.goto-form label {\n  font-weight: bold;\n}\n.goto-form label, .goto-form input {\n  display: inline-block;\n  font-family: inherit;\n}\n.deck-goto .goto-form {\n  display: block;\n}\n\n#goto-slide {\n  width: 8.375em;\n  margin: 0 0.625em;\n  height: 1.4375em;\n}\n\n@media print {\n  .goto-form, #goto-slide {\n    display: none;\n  }\n}\n\n.deck-container.no-status .deck-status {\n  display: none;\n}\n\n.deck-status {\n  position: absolute;\n  z-index: 3;\n  left: 0;\n  bottom: 10px;\n  margin: 0;\n  padding: 0;\n  font-size: 10px;\n  /*outline: 1px solid red;*/\n  width: 100%;\n  text-align: center;\n  color: #888;\n}\n\n.deck-prev-link, .deck-next-link {\n  display: none;\n  position: absolute;\n  z-index: 3;\n  top: 50%;\n  width: 32px;\n  height: 32px;\n  margin-top: -16px;\n  font-size: 20px;\n  font-weight: bold;\n  line-height: 32px;\n  vertical-align: middle;\n  text-align: center;\n  text-decoration: none;\n  color: #fff;\n  background: #888;\n  border-radius: 16px;\n}\n.deck-prev-link:hover, .deck-prev-link:focus, .deck-prev-link:active, .deck-prev-link:visited, .deck-next-link:hover, .deck-next-link:focus, .deck-next-link:active, .deck-next-link:visited {\n  color: #fff;\n}\n\n.deck-prev-link {\n  left: 8px;\n}\n\n.deck-next-link {\n  right: 8px;\n}\n\n.deck-container:hover .deck-prev-link, .deck-container:hover .deck-next-link {\n  display: block;\n}\n.deck-container:hover .deck-prev-link.deck-nav-disabled, .touch .deck-container:hover .deck-prev-link, .deck-container:hover .deck-next-link.deck-nav-disabled, .touch .deck-container:hover .deck-next-link {\n  display: none;\n}\n\n@media print {\n  .deck-prev-link, .deck-next-link {\n    display: none !important;\n  }\n}\n\n.deck-menu {\n  overflow: auto;\n}\n.deck-menu .slide {\n  background: #eee;\n  position: relative;\n  left: 0;\n  top: 0;\n  visibility: visible;\n  cursor: pointer;\n}\n.no-csstransforms .deck-menu > .slide {\n  float: left;\n  width: 22%;\n  height: 22%;\n  min-height: 0;\n  margin: 1%;\n  font-size: 0.22em;\n  overflow: hidden;\n  padding: 0 0.5%;\n}\n.csstransforms .deck-menu > .slide {\n  -webkit-transform: scale(0.22) !important;\n  -ms-transform: scale(0.22) !important;\n  transform: scale(0.22) !important;\n  -webkit-transform-origin: 0 0;\n  -ms-transform-origin: 0 0;\n  transform-origin: 0 0;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  padding: 0 48px;\n  margin: 12px;\n}\n.deck-menu iframe, .deck-menu img, .deck-menu video {\n  max-width: 100%;\n}\n.deck-menu .deck-current, .no-touch .deck-menu .slide:hover {\n  background: #ddf;\n}\n.deck-menu.deck-container:hover .deck-prev-link, .deck-menu.deck-container:hover .deck-next-link {\n  display: none;\n}\n\n.deck-container .attribution-wrap {\n  /* cover the complete offset parent */\n  position: absolute;\n  left: 0;\n  width: 100%;\n  top: 0;\n  height: 100%;\n}\n.deck-container .attribution-link {\n  font-size: 10px;\n  color: white;\n  background: black;\n  border: 1px solid darkgrey;\n  opacity: 0.6;\n  right: 0;\n  bottom: 5px;\n  position: absolute;\n  padding: 0 5px;\n}\n\n/* the time etc */\n.timekeeper {\n  font-size: 28px;\n  border-radius: 3px;\n  background: black;\n  color: white;\n  display: inline-block;\n  position: absolute;\n  left: 840px;\n  top: 340px;\n  width: 400px;\n  padding: 4px;\n  margin: -4px; }\n  body:not(.has-clones) .timekeeper {\n    visibility: hidden; }\n  .timekeeper .timekeeper-time, .timekeeper .timekeeper-local-relative-time {\n    margin: 0;\n    padding: 0;\n    display: inline-block;\n    width: 50%;\n    text-align: center;\n    vertical-align: middle; }\n    .timekeeper .timekeeper-time.timekeeper-local-relative-time, .timekeeper .timekeeper-local-relative-time.timekeeper-local-relative-time {\n      color: grey; }\n    .timekeeper .timekeeper-time.timekeeper-time, .timekeeper .timekeeper-local-relative-time.timekeeper-time {\n      border-left: 2px solid grey;\n      /*margin-left: -10px; not needed with the injected template (no space in it)*/\n      margin-right: -15px; }\n  .timekeeper .timekeeper-relative-time {\n    margin-top: 5px;\n    border-top: 2px solid grey;\n    text-align: center;\n    font-size: 300%; }\n  .timekeeper .timekeeper-bang, .timekeeper .timekeeper-clear {\n    display: inline-block;\n    position: absolute;\n    width: 10px;\n    height: 10px;\n    left: 45%;\n    border: 2px solid grey;\n    border-radius: 15px;\n    background: black; }\n    .timekeeper .timekeeper-bang.timekeeper-bang, .timekeeper .timekeeper-clear.timekeeper-bang {\n      top: 10px; }\n    .timekeeper .timekeeper-bang.timekeeper-clear, .timekeeper .timekeeper-clear.timekeeper-clear {\n      top: 23px; }\n    .timekeeper .timekeeper-bang:not(.timekeeper-notification), .timekeeper .timekeeper-clear:not(.timekeeper-notification) {\n      transition: background 300ms linear;\n      -webkit-transition: background 300ms linear; }\n    .timekeeper .timekeeper-bang.timekeeper-notification, .timekeeper .timekeeper-clear.timekeeper-notification {\n      border-color: white;\n      background: green; }\n      .timekeeper .timekeeper-bang.timekeeper-notification.timekeeper-clear, .timekeeper .timekeeper-clear.timekeeper-notification.timekeeper-clear {\n        background: red; }\n\n/* the logs */\n.timekeeper-logs {\n  visibility: hidden;\n  border: 2px solid black;\n  border-radius: 2px;\n  background: #181818;\n  color: yellow;\n  padding: 5px;\n  position: absolute;\n  width: 500px;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  opacity: .8; }\n  .timekeeper-logs.timekeeper-logs-visible {\n    visibility: visible; }\n  .timekeeper-logs pre {\n    font-size: 10px;\n    overflow-y: scroll;\n    position: absolute;\n    top: 50px;\n    bottom: 0;\n    left: 0;\n    right: 0; }\n  .timekeeper-logs .button {\n    color: white;\n    background: black;\n    display: inline-block;\n    padding: 0 5px;\n    margin-right: 10px;\n    border: 1px solid white;\n    border-radius: 3px; }\n\nbody.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) div.notes-target {\n  top: 490px; }\n\n.deck-container .slide.image-full > .attribution-wrap, .deck-container .slide.image-full > img, .deck-container .slide.image-full > div.img, .deck-container .slide.image-fit > .attribution-wrap, .deck-container .slide.image-fit > img, .deck-container .slide.image-fit > div.img {\n  z-index: -1;\n}\n.deck-container .slide.image-full > img, .deck-container .slide.image-full > div.img, .deck-container .slide.image-fit > img, .deck-container .slide.image-fit > div.img {\n  margin: 0;\n  padding: 0;\n  position: relative;\n  left: 0;\n  top: 0;\n  width: 100%;\n  min-height: 100%;\n}\n.deck-container .slide.image-full div.img, .deck-container .slide.image-fit div.img {\n  width: 100%;\n  height: 100%;\n  outline: 2px solid red;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n.deck-container .slide.image-full.image-full div.img, .deck-container .slide.image-fit.image-full div.img {\n  -webkit-background-size: cover;\n  -moz-background-size: cover;\n  -o-background-size: cover;\n  background-size: cover;\n}\n.deck-container .slide.image-full.image-fit div.img, .deck-container .slide.image-fit.image-fit div.img {\n  -webkit-background-size: contain;\n  -moz-background-size: contain;\n  -o-background-size: contain;\n  background-size: contain;\n}\n.deck-container .slide.top-left h2 {\n  position: absolute;\n  border: 0px;\n  top: 50px;\n  left: 50px;\n}\n.deck-container .slide.top-right h2 {\n  position: absolute;\n  border: 0px;\n  top: 50px;\n  right: 50px;\n}\n.deck-container .slide.bottom-left h2 {\n  position: absolute;\n  border: 0px;\n  bottom: 50px;\n  left: 50px;\n}\n.deck-container .slide.bottom-right h2 {\n  position: absolute;\n  border: 0px;\n  bottom: 50px;\n  right: 50px;\n}\n.deck-container .slide.no-title h1, .deck-container .slide.no-title h2 {\n  display: none;\n}\n.deck-container .slide.darkened h2 {\n  background: rgba(0, 0, 0, 0.75);\n  padding: 15px;\n  margin: -15px;\n}\n.deck-container .in3d-table {\n  transform: scale(0.7) perspective(600px) rotateX(40deg) rotateZ(-15deg) translate(-30px, -120px);\n}\n\n.deck-container:not(.deck-globalscale) div.comment, .deck-container:not(.deck-globalscale) .comment {\n  z-index: 1000 !important;\n  /* might need theme specific thing here */\n  background-color: yellow;\n  /* force opaque... */\n  color: darkred;\n}\n\n.deck-container:not(.deck-globalscale) .hasSVG .comment {\n  /*transform: none;*/\n  -webkit-transform: none;\n}\n\nbody:not(.has-clones):not(.show-comments) .deck-container > .slide .comment, body:not(.has-clones):not(.show-comments) .deck-container > .slide .showwhencomment {\n  display: none;\n}\n\n.deck-container > .slide div.comment {\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  /*outline: 1px solid red;*/\n  border-radius: 3px;\n  color: darkred;\n  background: rgba(255, 255, 128, 0.7);\n  /*        opacity: .8;*/\n  font-size: 14px;\n  line-height: initial;\n  padding: 1px 15px;\n  width: auto;\n  height: 20px;\n  margin: 0;\n  margin-left: 100px;\n  margin-top: -6.6px;\n  margin-bottom: -13.2px;\n}\n\n.deck-container > .slide div.comment.small {\n  width: 120px;\n  margin-left: -100px;\n}\n\n.deck-container > .slide div.comment.twolines {\n  height: 40px;\n  margin-top: -13.333px;\n  margin-bottom: -26.667px;\n}\n\n.browsercast {\n    position: absolute;\n    top: 5px; left: 5px;\n    right: 5px;\n}\n\n.browsercast-audio {\n    width: 100%;\n    margin: auto auto;\n}\n\n.browsercast-cue {\n    position: relative;\n    float: left;\n    height: 10px;\n    border-right: solid 2px #000;\n    cursor: pointer;\n}\n\n.browsercast-cue:last-child {\n    border-right: 0;\n}\n\n.browsercast-cue.active {\n    background-color: #abc;\n}\n\n\nmenu {\n  /* @size sets the relative size of the buttons, define before calling the buttons mixin */\n  /* Play */\n  /* Stop */\n  /* Fast-Forward */\n  /* Rewind */\n  /* Pause */\n  margin: 2em auto;\n  text-align: center;\n  position: relative;\n}\nmenu button {\n  position: relative;\n  display: inline-block;\n  padding: .6em;\n  background: linear-gradient(#ffffff, #cccccc), #c9c5c9;\n  border-radius: 10em;\n  border: 0 solid #d0d0d0;\n  width: 3em;\n  height: 3em;\n  margin-right: 20px;\n  box-shadow: 0 0.18em 0.21em rgba(0, 0, 0, 0.4);\n}\nmenu button:hover {\n  background: linear-gradient(#f5f5f5, #b9b9b9), #c9c5c9;\n}\nmenu button:before,\nmenu button:after {\n  position: absolute;\n  content: \" \";\n}\nmenu button:active {\n  top: 0.15em;\n  box-shadow: 0 0.06em 0.09em rgba(0, 0, 0, 0.4);\n}\nmenu .play:before {\n  z-index: 2;\n  top: 0.66em;\n  left: 1.08em;\n  width: 0;\n  height: 0;\n  border: 0.9em solid transparent;\n  border-left-color: rgba(100, 100, 100, 0.8);\n  border-left-width: 1.35em;\n}\nmenu .play:hover:before {\n  border-left-color: rgba(36, 36, 36, 0.8);\n}\nmenu .stop:before {\n  top: 0.84em;\n  left: 0.84em;\n  width: 1.41em;\n  height: 1.41em;\n  background: rgba(100, 100, 100, 0.8);\n}\nmenu .stop:hover:before {\n  background: rgba(36, 36, 36, 0.8);\n}\nmenu .ff:before,\nmenu .ff:after {\n  width: 0;\n  height: 0;\n  top: 0.78em;\n  border: 0.75em solid transparent;\n  border-left-color: rgba(100, 100, 100, 0.8);\n  border-left-width: 0.81em;\n}\nmenu .ff:before {\n  left: 0.9em;\n}\nmenu .ff:after {\n  left: 1.698em;\n  content: \" \";\n}\nmenu .ff:hover:before,\nmenu .ff:hover:after {\n  border-left-color: rgba(36, 36, 36, 0.8);\n}\nmenu .rw:before,\nmenu .rw:after {\n  width: 0;\n  height: 0;\n  top: 0.78em;\n  border: 0.75em solid transparent;\n  border-right-color: rgba(100, 100, 100, 0.8);\n  border-right-width: 0.81em;\n}\nmenu .rw:before {\n  left: 0.66em;\n}\nmenu .rw:after {\n  left: -0.15em;\n  content: \" \";\n}\nmenu .rw:hover:after,\nmenu .rw:hover:before {\n  border-right-color: rgba(36, 36, 36, 0.8);\n}\nmenu .pause:before,\nmenu .pause:after {\n  height: 1.41em;\n  width: 0.57em;\n  left: 0.87em;\n  top: 0.84em;\n  display: block;\n  background-color: rgba(100, 100, 100, 0.8);\n}\nmenu .pause:after {\n  left: 1.62em;\n}\nmenu .pause:hover:before,\nmenu .pause:hover:after {\n  background-color: rgba(36, 36, 36, 0.8);\n}\nmenu.medium {\n  /* Play */\n  /* Stop */\n  /* Fast-Forward */\n  /* Rewind */\n  /* Pause */\n}\nmenu.medium button {\n  position: relative;\n  display: inline-block;\n  padding: .6em;\n  background: linear-gradient(#ffffff, #cccccc), #c9c5c9;\n  border-radius: 10em;\n  border: 0 solid #d0d0d0;\n  width: 5em;\n  height: 5em;\n  margin-right: 20px;\n  box-shadow: 0 0.3em 0.35em rgba(0, 0, 0, 0.4);\n}\nmenu.medium button:hover {\n  background: linear-gradient(#f5f5f5, #b9b9b9), #c9c5c9;\n}\nmenu.medium button:before,\nmenu.medium button:after {\n  position: absolute;\n  content: \" \";\n}\nmenu.medium button:active {\n  top: 0.25em;\n  box-shadow: 0 0.1em 0.15em rgba(0, 0, 0, 0.4);\n}\nmenu.medium .play:before {\n  z-index: 2;\n  top: 1.1em;\n  left: 1.8em;\n  width: 0;\n  height: 0;\n  border: 1.5em solid transparent;\n  border-left-color: rgba(100, 100, 100, 0.8);\n  border-left-width: 2.25em;\n}\nmenu.medium .play:hover:before {\n  border-left-color: rgba(36, 36, 36, 0.8);\n}\nmenu.medium .stop:before {\n  top: 1.4em;\n  left: 1.4em;\n  width: 2.35em;\n  height: 2.35em;\n  background: rgba(100, 100, 100, 0.8);\n}\nmenu.medium .stop:hover:before {\n  background: rgba(36, 36, 36, 0.8);\n}\nmenu.medium .ff:before,\nmenu.medium .ff:after {\n  width: 0;\n  height: 0;\n  top: 1.3em;\n  border: 1.25em solid transparent;\n  border-left-color: rgba(100, 100, 100, 0.8);\n  border-left-width: 1.35em;\n}\nmenu.medium .ff:before {\n  left: 1.5em;\n}\nmenu.medium .ff:after {\n  left: 2.83em;\n  content: \" \";\n}\nmenu.medium .ff:hover:before,\nmenu.medium .ff:hover:after {\n  border-left-color: rgba(36, 36, 36, 0.8);\n}\nmenu.medium .rw:before,\nmenu.medium .rw:after {\n  width: 0;\n  height: 0;\n  top: 1.3em;\n  border: 1.25em solid transparent;\n  border-right-color: rgba(100, 100, 100, 0.8);\n  border-right-width: 1.35em;\n}\nmenu.medium .rw:before {\n  left: 1.1em;\n}\nmenu.medium .rw:after {\n  left: -0.25em;\n  content: \" \";\n}\nmenu.medium .rw:hover:after,\nmenu.medium .rw:hover:before {\n  border-right-color: rgba(36, 36, 36, 0.8);\n}\nmenu.medium .pause:before,\nmenu.medium .pause:after {\n  height: 2.35em;\n  width: 0.95em;\n  left: 1.45em;\n  top: 1.4em;\n  display: block;\n  background-color: rgba(100, 100, 100, 0.8);\n}\nmenu.medium .pause:after {\n  left: 2.7em;\n}\nmenu.medium .pause:hover:before,\nmenu.medium .pause:hover:after {\n  background-color: rgba(36, 36, 36, 0.8);\n}\nmenu.small {\n  /* Play */\n  /* Stop */\n  /* Fast-Forward */\n  /* Rewind */\n  /* Pause */\n}\nmenu.small button {\n  position: relative;\n  display: inline-block;\n  padding: .6em;\n  background: linear-gradient(#ffffff, #cccccc), #c9c5c9;\n  border-radius: 10em;\n  border: 0 solid #d0d0d0;\n  width: 3em;\n  height: 3em;\n  margin-right: 20px;\n  box-shadow: 0 0.18em 0.21em rgba(0, 0, 0, 0.4);\n}\nmenu.small button:hover {\n  background: linear-gradient(#f5f5f5, #b9b9b9), #c9c5c9;\n}\nmenu.small button:before,\nmenu.small button:after {\n  position: absolute;\n  content: \" \";\n}\nmenu.small button:active {\n  top: 0.15em;\n  box-shadow: 0 0.06em 0.09em rgba(0, 0, 0, 0.4);\n}\nmenu.small .play:before {\n  z-index: 2;\n  top: 0.66em;\n  left: 1.08em;\n  width: 0;\n  height: 0;\n  border: 0.9em solid transparent;\n  border-left-color: rgba(100, 100, 100, 0.8);\n  border-left-width: 1.35em;\n}\nmenu.small .play:hover:before {\n  border-left-color: rgba(36, 36, 36, 0.8);\n}\nmenu.small .stop:before {\n  top: 0.84em;\n  left: 0.84em;\n  width: 1.41em;\n  height: 1.41em;\n  background: rgba(100, 100, 100, 0.8);\n}\nmenu.small .stop:hover:before {\n  background: rgba(36, 36, 36, 0.8);\n}\nmenu.small .ff:before,\nmenu.small .ff:after {\n  width: 0;\n  height: 0;\n  top: 0.78em;\n  border: 0.75em solid transparent;\n  border-left-color: rgba(100, 100, 100, 0.8);\n  border-left-width: 0.81em;\n}\nmenu.small .ff:before {\n  left: 0.9em;\n}\nmenu.small .ff:after {\n  left: 1.698em;\n  content: \" \";\n}\nmenu.small .ff:hover:before,\nmenu.small .ff:hover:after {\n  border-left-color: rgba(36, 36, 36, 0.8);\n}\nmenu.small .rw:before,\nmenu.small .rw:after {\n  width: 0;\n  height: 0;\n  top: 0.78em;\n  border: 0.75em solid transparent;\n  border-right-color: rgba(100, 100, 100, 0.8);\n  border-right-width: 0.81em;\n}\nmenu.small .rw:before {\n  left: 0.66em;\n}\nmenu.small .rw:after {\n  left: -0.15em;\n  content: \" \";\n}\nmenu.small .rw:hover:after,\nmenu.small .rw:hover:before {\n  border-right-color: rgba(36, 36, 36, 0.8);\n}\nmenu.small .pause:before,\nmenu.small .pause:after {\n  height: 1.41em;\n  width: 0.57em;\n  left: 0.87em;\n  top: 0.84em;\n  display: block;\n  background-color: rgba(100, 100, 100, 0.8);\n}\nmenu.small .pause:after {\n  left: 1.62em;\n}\nmenu.small .pause:hover:before,\nmenu.small .pause:hover:after {\n  background-color: rgba(36, 36, 36, 0.8);\n}\n/*\nThe buttons mixin that defines the buttons styles, the @size must be defined to set the relative size\n*/\n/*\nOther Styles\n*/\nbody {\n  background: #c1c1c1;\n}\n\n\n\n\n/* ///////////////////////////////// */\n\n\n.browsercast-time-label, .browsercast-total-time-label {\n    z-index: 1;\n    background-color: grey;\n    font-family: lato;\n    color: #DDD;\n    text-shadow: #555 1px 1px 1px;\n    padding: 0 5px;\n    border-radius: 2px;\n    font-size: 10px;\n    display: inline-block;\n    position: absolute;\n}\n.browsercast-total-time-label {\n    right: 0%;\n    bottom: -17px;\n    background-color: #333;\n    transform: translate(50%, 0) translate(-3px, 0);\n}\n.browsercast-time-label {\n    z-index: 2;\n    left: 0%;\n    transition: left 200ms linear;\n    bottom: -17px;\n    transform: translate(-50%, 0) translate(-3px, 0);\n}\n.browsercast-time-label:after {\n    content: ' ';\n    height: 0; \n    position: absolute;\n    width: 0;\n    \n    border: 8px solid transparent;\n    border-bottom-color: grey;\n    \n    bottom: 100%;\n    left: 50%;\n    margin-left: -7px;\n}\n\n\n/* ///////////////////////// */\nmenu {\n    padding: 0;\n    margin: 0;\n}\n\nmenu .playpause {\n    position: absolute;\n    left: 0;\n    top: 0;\n    font-size: 12px;\n    margin: 0; padding: 0;\n}\n\n.browsercast-markers {\n    position: absolute;\n    top: 0; height: 10px;\n    left: 3em; right: 1em;\n    background-color: #e3e3e3;\n}\n") }
+function ACTUALLY_FILL_CSS(el) { $(el).text("\n"+
+".deck-container {\n"+
+"  position: relative;\n"+
+"  overflow: hidden;\n"+
+"  margin: 0;\n"+
+"}\n"+
+"\n"+
+".deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide:not(.deck-current), .deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide:not(.deck-child-current) {\n"+
+"  display: none;\n"+
+"}\n"+
+".deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide.deck-current, .deck-container:not(.show-all-slides):not(.deck-menu):not(.deck-loading) > .slide.deck-child-current {\n"+
+"  display: block;\n"+
+"}\n"+
+"\n"+
+".deck-container.deck-loading > *:not(.deck-loading-splash) {\n"+
+"  visibility: hidden;\n"+
+"}\n"+
+".touch .deck-container {\n"+
+"  -webkit-text-size-adjust: none;\n"+
+"  -moz-text-size-adjust: none;\n"+
+"}\n"+
+".deck-container > .slide {\n"+
+"  position: absolute;\n"+
+"}\n"+
+".deck-container > .slide.deck-current, .deck-container > .slide.deck-child-current {\n"+
+"  position: absolute;\n"+
+"  /* relative to parent */\n"+
+"}\n"+
+".deck-container > .slide.deck-current .slide, .deck-container > .slide.deck-child-current .slide {\n"+
+"  visibility: hidden;\n"+
+"}\n"+
+".deck-container > .slide.deck-current .deck-previous, .deck-container > .slide.deck-current .deck-before, .deck-container > .slide.deck-current .deck-current, .deck-container > .slide.deck-child-current .deck-previous, .deck-container > .slide.deck-child-current .deck-before, .deck-container > .slide.deck-child-current .deck-current {\n"+
+"  visibility: visible;\n"+
+"}\n"+
+".deck-container.deck-anim-ready .deck-loading-splash {\n"+
+"  visibility: hidden;\n"+
+"  opacity: 0;\n"+
+"  /*\n"+
+"      right: 100%;\n"+
+"      left: -100%;\n"+
+"  */\n"+
+"  -webkit-transition: visibility 0s linear 0.5s, all 0.5s linear;\n"+
+"  transition: visibility 0s linear .5s, all 0.5s linear;\n"+
+"}\n"+
+".deck-container .deck-loading-splash {\n"+
+"  visibility: visible;\n"+
+"  opacity: 1;\n"+
+"  position: absolute;\n"+
+"  text-align: center;\n"+
+"  padding-top: 200px;\n"+
+"  display: flex;\n"+
+"  margin: 0 auto;\n"+
+"  left: 0;\n"+
+"  top: 0;\n"+
+"  right: 0;\n"+
+"  bottom: 0;\n"+
+"  background: black;\n"+
+"  color: white;\n"+
+"  z-index: 100;\n"+
+"}\n"+
+"\n"+
+"\n"+
+".deck-container {\n"+
+"    width: 100%; height: 100%; /* to get a proper filling of the parent */\n"+
+"    margin: 0; padding: 0; /* any margin is handled by the parent or the fit extension */\n"+
+"    position: absolute;\n"+
+"    left:0; top:0; width:100%; height:100%;\n"+
+"    border: 0;\n"+
+"}\n"+
+".deck-container>.slide {\n"+
+"    width: 100%; height: 100%; /* to get a proper filling of the parent */\n"+
+"    min-width:0; min-height:0; /* undoing some hurting style in the defaults of deck.js */\n"+
+"    overflow: hidden; /* don't show slides outside of their box */\n"+
+"    /* margin:0; padding:0; /* remove possible margins */\n"+
+"}\n"+
+"\n"+
+"body.is-clone .clonepointer {\n"+
+"  /* default convenient positioning for clone pointers */\n"+
+"  position: absolute;\n"+
+"  z-index: 10; }\n"+
+"  body.is-clone .clonepointer.scale-on-click {\n"+
+"    transition: transform 80ms linear;\n"+
+"    -webkit-transition: -webkit-transform 80ms linear; }\n"+
+"    body.is-clone .clonepointer.scale-on-click.pointer-click {\n"+
+"      transition: transform 150ms linear;\n"+
+"      -webkit-transition: -webkit-transform 150ms linear;\n"+
+"      transform: translate(-50%, -50%) scale(1.5, 1.5) translate(50%, 50%);\n"+
+"      -webkit-transform: translate(-50%, -50%) scale(1.5, 1.5) translate(50%, 50%); }\n"+
+"\n"+
+".notes, .notes-target {\n"+
+"  display: none; }\n"+
+"\n"+
+"body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-current, body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-child-current {\n"+
+"  outline: 5px solid grey;\n"+
+"  /* use outline to avoid layout issues with old themes and allow for precise pointer position estimation */\n"+
+"  overflow: hidden;\n"+
+"  left: 0;\n"+
+"  top: 0;\n"+
+"  transform: translate(20px, 20px);\n"+
+"  -webkit-transform: translate(20px, 20px); }\n"+
+"  body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-current + .slide, body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-child-current + .slide {\n"+
+"    outline: 5px solid grey;\n"+
+"    overflow: hidden;\n"+
+"    display: block !important;\n"+
+"    visibility: visible;\n"+
+"    top: 0;\n"+
+"    left: 0;\n"+
+"    transform: translate(-50%, -50%) scale(0.5) translate(50%, 50%) translate(200%, 0) translate(80px, 40px);\n"+
+"    -webkit-transform: translate(-50%, -50%) scale(0.5) translate(50%, 50%) translate(200%, 0) translate(80px, 40px); }\n"+
+"    body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-current + .slide.deck-next, body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) > .slide.deck-child-current + .slide.deck-next {\n"+
+"      outline-color: red; }\n"+
+"body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) .notes-target {\n"+
+"  display: block;\n"+
+"  background: black;\n"+
+"  color: #FFB;\n"+
+"  padding: 5px;\n"+
+"  position: absolute;\n"+
+"  left: 840px;\n"+
+"  right: 0;\n"+
+"  top: 340px;\n"+
+"  bottom: 0; }\n"+
+"\n"+
+".goto-form {\n"+
+"  position: absolute;\n"+
+"  z-index: 3;\n"+
+"  bottom: 10px;\n"+
+"  left: 50%;\n"+
+"  height: 1.75em;\n"+
+"  margin: 0 0 0 -9.125em;\n"+
+"  line-height: 1.75em;\n"+
+"  padding: 0.625em;\n"+
+"  display: none;\n"+
+"  background: #ccc;\n"+
+"  overflow: hidden;\n"+
+"  border-radius: 10px;\n"+
+"}\n"+
+".goto-form label {\n"+
+"  font-weight: bold;\n"+
+"}\n"+
+".goto-form label, .goto-form input {\n"+
+"  display: inline-block;\n"+
+"  font-family: inherit;\n"+
+"}\n"+
+".deck-goto .goto-form {\n"+
+"  display: block;\n"+
+"}\n"+
+"\n"+
+"#goto-slide {\n"+
+"  width: 8.375em;\n"+
+"  margin: 0 0.625em;\n"+
+"  height: 1.4375em;\n"+
+"}\n"+
+"\n"+
+"@media print {\n"+
+"  .goto-form, #goto-slide {\n"+
+"    display: none;\n"+
+"  }\n"+
+"}\n"+
+"\n"+
+".deck-container.no-status .deck-status {\n"+
+"  display: none;\n"+
+"}\n"+
+"\n"+
+".deck-status {\n"+
+"  position: absolute;\n"+
+"  z-index: 3;\n"+
+"  left: 0;\n"+
+"  bottom: 10px;\n"+
+"  margin: 0;\n"+
+"  padding: 0;\n"+
+"  font-size: 10px;\n"+
+"  /*outline: 1px solid red;*/\n"+
+"  width: 100%;\n"+
+"  text-align: center;\n"+
+"  color: #888;\n"+
+"}\n"+
+"\n"+
+".deck-prev-link, .deck-next-link {\n"+
+"  display: none;\n"+
+"  position: absolute;\n"+
+"  z-index: 3;\n"+
+"  top: 50%;\n"+
+"  width: 32px;\n"+
+"  height: 32px;\n"+
+"  margin-top: -16px;\n"+
+"  font-size: 20px;\n"+
+"  font-weight: bold;\n"+
+"  line-height: 32px;\n"+
+"  vertical-align: middle;\n"+
+"  text-align: center;\n"+
+"  text-decoration: none;\n"+
+"  color: #fff;\n"+
+"  background: #888;\n"+
+"  border-radius: 16px;\n"+
+"}\n"+
+".deck-prev-link:hover, .deck-prev-link:focus, .deck-prev-link:active, .deck-prev-link:visited, .deck-next-link:hover, .deck-next-link:focus, .deck-next-link:active, .deck-next-link:visited {\n"+
+"  color: #fff;\n"+
+"}\n"+
+"\n"+
+".deck-prev-link {\n"+
+"  left: 8px;\n"+
+"}\n"+
+"\n"+
+".deck-next-link {\n"+
+"  right: 8px;\n"+
+"}\n"+
+"\n"+
+".deck-container:hover .deck-prev-link, .deck-container:hover .deck-next-link {\n"+
+"  display: block;\n"+
+"}\n"+
+".deck-container:hover .deck-prev-link.deck-nav-disabled, .touch .deck-container:hover .deck-prev-link, .deck-container:hover .deck-next-link.deck-nav-disabled, .touch .deck-container:hover .deck-next-link {\n"+
+"  display: none;\n"+
+"}\n"+
+"\n"+
+"@media print {\n"+
+"  .deck-prev-link, .deck-next-link {\n"+
+"    display: none !important;\n"+
+"  }\n"+
+"}\n"+
+"\n"+
+".deck-menu {\n"+
+"  overflow: auto;\n"+
+"}\n"+
+".deck-menu .slide {\n"+
+"  background: #eee;\n"+
+"  position: relative;\n"+
+"  left: 0;\n"+
+"  top: 0;\n"+
+"  visibility: visible;\n"+
+"  cursor: pointer;\n"+
+"}\n"+
+".no-csstransforms .deck-menu > .slide {\n"+
+"  float: left;\n"+
+"  width: 22%;\n"+
+"  height: 22%;\n"+
+"  min-height: 0;\n"+
+"  margin: 1%;\n"+
+"  font-size: 0.22em;\n"+
+"  overflow: hidden;\n"+
+"  padding: 0 0.5%;\n"+
+"}\n"+
+".csstransforms .deck-menu > .slide {\n"+
+"  -webkit-transform: scale(0.22) !important;\n"+
+"  -ms-transform: scale(0.22) !important;\n"+
+"  transform: scale(0.22) !important;\n"+
+"  -webkit-transform-origin: 0 0;\n"+
+"  -ms-transform-origin: 0 0;\n"+
+"  transform-origin: 0 0;\n"+
+"  -moz-box-sizing: border-box;\n"+
+"  box-sizing: border-box;\n"+
+"  width: 100%;\n"+
+"  height: 100%;\n"+
+"  overflow: hidden;\n"+
+"  padding: 0 48px;\n"+
+"  margin: 12px;\n"+
+"}\n"+
+".deck-menu iframe, .deck-menu img, .deck-menu video {\n"+
+"  max-width: 100%;\n"+
+"}\n"+
+".deck-menu .deck-current, .no-touch .deck-menu .slide:hover {\n"+
+"  background: #ddf;\n"+
+"}\n"+
+".deck-menu.deck-container:hover .deck-prev-link, .deck-menu.deck-container:hover .deck-next-link {\n"+
+"  display: none;\n"+
+"}\n"+
+"\n"+
+".deck-container .attribution-wrap {\n"+
+"  /* cover the complete offset parent */\n"+
+"  position: absolute;\n"+
+"  left: 0;\n"+
+"  width: 100%;\n"+
+"  top: 0;\n"+
+"  height: 100%;\n"+
+"}\n"+
+".deck-container .attribution-link {\n"+
+"  font-size: 10px;\n"+
+"  color: white;\n"+
+"  background: black;\n"+
+"  border: 1px solid darkgrey;\n"+
+"  opacity: 0.6;\n"+
+"  right: 0;\n"+
+"  bottom: 5px;\n"+
+"  position: absolute;\n"+
+"  padding: 0 5px;\n"+
+"}\n"+
+"\n"+
+"/* the time etc */\n"+
+".timekeeper {\n"+
+"  font-size: 28px;\n"+
+"  border-radius: 3px;\n"+
+"  background: black;\n"+
+"  color: white;\n"+
+"  display: inline-block;\n"+
+"  position: absolute;\n"+
+"  left: 840px;\n"+
+"  top: 340px;\n"+
+"  width: 400px;\n"+
+"  padding: 4px;\n"+
+"  margin: -4px; }\n"+
+"  body:not(.has-clones) .timekeeper {\n"+
+"    visibility: hidden; }\n"+
+"  .timekeeper .timekeeper-time, .timekeeper .timekeeper-local-relative-time {\n"+
+"    margin: 0;\n"+
+"    padding: 0;\n"+
+"    display: inline-block;\n"+
+"    width: 50%;\n"+
+"    text-align: center;\n"+
+"    vertical-align: middle; }\n"+
+"    .timekeeper .timekeeper-time.timekeeper-local-relative-time, .timekeeper .timekeeper-local-relative-time.timekeeper-local-relative-time {\n"+
+"      color: grey; }\n"+
+"    .timekeeper .timekeeper-time.timekeeper-time, .timekeeper .timekeeper-local-relative-time.timekeeper-time {\n"+
+"      border-left: 2px solid grey;\n"+
+"      /*margin-left: -10px; not needed with the injected template (no space in it)*/\n"+
+"      margin-right: -15px; }\n"+
+"  .timekeeper .timekeeper-relative-time {\n"+
+"    margin-top: 5px;\n"+
+"    border-top: 2px solid grey;\n"+
+"    text-align: center;\n"+
+"    font-size: 300%; }\n"+
+"  .timekeeper .timekeeper-bang, .timekeeper .timekeeper-clear {\n"+
+"    display: inline-block;\n"+
+"    position: absolute;\n"+
+"    width: 10px;\n"+
+"    height: 10px;\n"+
+"    left: 45%;\n"+
+"    border: 2px solid grey;\n"+
+"    border-radius: 15px;\n"+
+"    background: black; }\n"+
+"    .timekeeper .timekeeper-bang.timekeeper-bang, .timekeeper .timekeeper-clear.timekeeper-bang {\n"+
+"      top: 10px; }\n"+
+"    .timekeeper .timekeeper-bang.timekeeper-clear, .timekeeper .timekeeper-clear.timekeeper-clear {\n"+
+"      top: 23px; }\n"+
+"    .timekeeper .timekeeper-bang:not(.timekeeper-notification), .timekeeper .timekeeper-clear:not(.timekeeper-notification) {\n"+
+"      transition: background 300ms linear;\n"+
+"      -webkit-transition: background 300ms linear; }\n"+
+"    .timekeeper .timekeeper-bang.timekeeper-notification, .timekeeper .timekeeper-clear.timekeeper-notification {\n"+
+"      border-color: white;\n"+
+"      background: green; }\n"+
+"      .timekeeper .timekeeper-bang.timekeeper-notification.timekeeper-clear, .timekeeper .timekeeper-clear.timekeeper-notification.timekeeper-clear {\n"+
+"        background: red; }\n"+
+"\n"+
+"/* the logs */\n"+
+".timekeeper-logs {\n"+
+"  visibility: hidden;\n"+
+"  border: 2px solid black;\n"+
+"  border-radius: 2px;\n"+
+"  background: #181818;\n"+
+"  color: yellow;\n"+
+"  padding: 5px;\n"+
+"  position: absolute;\n"+
+"  width: 500px;\n"+
+"  right: 0;\n"+
+"  top: 0;\n"+
+"  bottom: 0;\n"+
+"  opacity: .8; }\n"+
+"  .timekeeper-logs.timekeeper-logs-visible {\n"+
+"    visibility: visible; }\n"+
+"  .timekeeper-logs pre {\n"+
+"    font-size: 10px;\n"+
+"    overflow-y: scroll;\n"+
+"    position: absolute;\n"+
+"    top: 50px;\n"+
+"    bottom: 0;\n"+
+"    left: 0;\n"+
+"    right: 0; }\n"+
+"  .timekeeper-logs .button {\n"+
+"    color: white;\n"+
+"    background: black;\n"+
+"    display: inline-block;\n"+
+"    padding: 0 5px;\n"+
+"    margin-right: 10px;\n"+
+"    border: 1px solid white;\n"+
+"    border-radius: 3px; }\n"+
+"\n"+
+"body.has-clones .deck-container:not(.deck-globalscale):not(.deck-menu) div.notes-target {\n"+
+"  top: 490px; }\n"+
+"\n"+
+".deck-container .slide.image-full > .attribution-wrap, .deck-container .slide.image-full > img, .deck-container .slide.image-full > div.img, .deck-container .slide.image-fit > .attribution-wrap, .deck-container .slide.image-fit > img, .deck-container .slide.image-fit > div.img {\n"+
+"  z-index: -1;\n"+
+"}\n"+
+".deck-container .slide.image-full > img, .deck-container .slide.image-full > div.img, .deck-container .slide.image-fit > img, .deck-container .slide.image-fit > div.img {\n"+
+"  margin: 0;\n"+
+"  padding: 0;\n"+
+"  position: relative;\n"+
+"  left: 0;\n"+
+"  top: 0;\n"+
+"  width: 100%;\n"+
+"  min-height: 100%;\n"+
+"}\n"+
+".deck-container .slide.image-full div.img, .deck-container .slide.image-fit div.img {\n"+
+"  width: 100%;\n"+
+"  height: 100%;\n"+
+"  outline: 2px solid red;\n"+
+"  background-position: center center;\n"+
+"  background-repeat: no-repeat;\n"+
+"}\n"+
+".deck-container .slide.image-full.image-full div.img, .deck-container .slide.image-fit.image-full div.img {\n"+
+"  -webkit-background-size: cover;\n"+
+"  -moz-background-size: cover;\n"+
+"  -o-background-size: cover;\n"+
+"  background-size: cover;\n"+
+"}\n"+
+".deck-container .slide.image-full.image-fit div.img, .deck-container .slide.image-fit.image-fit div.img {\n"+
+"  -webkit-background-size: contain;\n"+
+"  -moz-background-size: contain;\n"+
+"  -o-background-size: contain;\n"+
+"  background-size: contain;\n"+
+"}\n"+
+".deck-container .slide.top-left h2 {\n"+
+"  position: absolute;\n"+
+"  border: 0px;\n"+
+"  top: 50px;\n"+
+"  left: 50px;\n"+
+"}\n"+
+".deck-container .slide.top-right h2 {\n"+
+"  position: absolute;\n"+
+"  border: 0px;\n"+
+"  top: 50px;\n"+
+"  right: 50px;\n"+
+"}\n"+
+".deck-container .slide.bottom-left h2 {\n"+
+"  position: absolute;\n"+
+"  border: 0px;\n"+
+"  bottom: 50px;\n"+
+"  left: 50px;\n"+
+"}\n"+
+".deck-container .slide.bottom-right h2 {\n"+
+"  position: absolute;\n"+
+"  border: 0px;\n"+
+"  bottom: 50px;\n"+
+"  right: 50px;\n"+
+"}\n"+
+".deck-container .slide.no-title h1, .deck-container .slide.no-title h2 {\n"+
+"  display: none;\n"+
+"}\n"+
+".deck-container .slide.darkened h2 {\n"+
+"  background: rgba(0, 0, 0, 0.75);\n"+
+"  padding: 15px;\n"+
+"  margin: -15px;\n"+
+"}\n"+
+".deck-container .in3d-table {\n"+
+"  transform: scale(0.7) perspective(600px) rotateX(40deg) rotateZ(-15deg) translate(-30px, -120px);\n"+
+"}\n"+
+"\n"+
+".deck-container:not(.deck-globalscale) div.comment, .deck-container:not(.deck-globalscale) .comment {\n"+
+"  z-index: 1000 !important;\n"+
+"  /* might need theme specific thing here */\n"+
+"  background-color: yellow;\n"+
+"  /* force opaque... */\n"+
+"  color: darkred;\n"+
+"}\n"+
+"\n"+
+".deck-container:not(.deck-globalscale) .hasSVG .comment {\n"+
+"  /*transform: none;*/\n"+
+"  -webkit-transform: none;\n"+
+"}\n"+
+"\n"+
+"body:not(.has-clones):not(.show-comments) .deck-container > .slide .comment, body:not(.has-clones):not(.show-comments) .deck-container > .slide .showwhencomment {\n"+
+"  display: none;\n"+
+"}\n"+
+"\n"+
+".deck-container > .slide div.comment {\n"+
+"  -webkit-box-sizing: border-box;\n"+
+"  -moz-box-sizing: border-box;\n"+
+"  box-sizing: border-box;\n"+
+"  /*outline: 1px solid red;*/\n"+
+"  border-radius: 3px;\n"+
+"  color: darkred;\n"+
+"  background: rgba(255, 255, 128, 0.7);\n"+
+"  /*        opacity: .8;*/\n"+
+"  font-size: 14px;\n"+
+"  line-height: initial;\n"+
+"  padding: 1px 15px;\n"+
+"  width: auto;\n"+
+"  height: 20px;\n"+
+"  margin: 0;\n"+
+"  margin-left: 100px;\n"+
+"  margin-top: -6.6px;\n"+
+"  margin-bottom: -13.2px;\n"+
+"}\n"+
+"\n"+
+".deck-container > .slide div.comment.small {\n"+
+"  width: 120px;\n"+
+"  margin-left: -100px;\n"+
+"}\n"+
+"\n"+
+".deck-container > .slide div.comment.twolines {\n"+
+"  height: 40px;\n"+
+"  margin-top: -13.333px;\n"+
+"  margin-bottom: -26.667px;\n"+
+"}\n"+
+"\n"+
+".browsercast {\n"+
+"    position: absolute;\n"+
+"    top: 5px; left: 5px;\n"+
+"    right: 5px;\n"+
+"}\n"+
+"\n"+
+".browsercast-audio {\n"+
+"    width: 100%;\n"+
+"    margin: auto auto;\n"+
+"}\n"+
+"\n"+
+".browsercast-cue {\n"+
+"    position: relative;\n"+
+"    float: left;\n"+
+"    height: 10px;\n"+
+"    border-right: solid 2px #000;\n"+
+"    cursor: pointer;\n"+
+"}\n"+
+"\n"+
+".browsercast-cue:last-child {\n"+
+"    border-right: 0;\n"+
+"}\n"+
+"\n"+
+".browsercast-cue.active {\n"+
+"    background-color: #abc;\n"+
+"}\n"+
+"\n"+
+"\n"+
+"menu {\n"+
+"  /* @size sets the relative size of the buttons, define before calling the buttons mixin */\n"+
+"  /* Play */\n"+
+"  /* Stop */\n"+
+"  /* Fast-Forward */\n"+
+"  /* Rewind */\n"+
+"  /* Pause */\n"+
+"  margin: 2em auto;\n"+
+"  text-align: center;\n"+
+"  position: relative;\n"+
+"}\n"+
+"menu button {\n"+
+"  position: relative;\n"+
+"  display: inline-block;\n"+
+"  padding: .6em;\n"+
+"  background: linear-gradient(#ffffff, #cccccc), #c9c5c9;\n"+
+"  border-radius: 10em;\n"+
+"  border: 0 solid #d0d0d0;\n"+
+"  width: 3em;\n"+
+"  height: 3em;\n"+
+"  margin-right: 20px;\n"+
+"  box-shadow: 0 0.18em 0.21em rgba(0, 0, 0, 0.4);\n"+
+"}\n"+
+"menu button:hover {\n"+
+"  background: linear-gradient(#f5f5f5, #b9b9b9), #c9c5c9;\n"+
+"}\n"+
+"menu button:before,\n"+
+"menu button:after {\n"+
+"  position: absolute;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu button:active {\n"+
+"  top: 0.15em;\n"+
+"  box-shadow: 0 0.06em 0.09em rgba(0, 0, 0, 0.4);\n"+
+"}\n"+
+"menu .play:before {\n"+
+"  z-index: 2;\n"+
+"  top: 0.66em;\n"+
+"  left: 1.08em;\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  border: 0.9em solid transparent;\n"+
+"  border-left-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-left-width: 1.35em;\n"+
+"}\n"+
+"menu .play:hover:before {\n"+
+"  border-left-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu .stop:before {\n"+
+"  top: 0.84em;\n"+
+"  left: 0.84em;\n"+
+"  width: 1.41em;\n"+
+"  height: 1.41em;\n"+
+"  background: rgba(100, 100, 100, 0.8);\n"+
+"}\n"+
+"menu .stop:hover:before {\n"+
+"  background: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu .ff:before,\n"+
+"menu .ff:after {\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  top: 0.78em;\n"+
+"  border: 0.75em solid transparent;\n"+
+"  border-left-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-left-width: 0.81em;\n"+
+"}\n"+
+"menu .ff:before {\n"+
+"  left: 0.9em;\n"+
+"}\n"+
+"menu .ff:after {\n"+
+"  left: 1.698em;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu .ff:hover:before,\n"+
+"menu .ff:hover:after {\n"+
+"  border-left-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu .rw:before,\n"+
+"menu .rw:after {\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  top: 0.78em;\n"+
+"  border: 0.75em solid transparent;\n"+
+"  border-right-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-right-width: 0.81em;\n"+
+"}\n"+
+"menu .rw:before {\n"+
+"  left: 0.66em;\n"+
+"}\n"+
+"menu .rw:after {\n"+
+"  left: -0.15em;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu .rw:hover:after,\n"+
+"menu .rw:hover:before {\n"+
+"  border-right-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu .pause:before,\n"+
+"menu .pause:after {\n"+
+"  height: 1.41em;\n"+
+"  width: 0.57em;\n"+
+"  left: 0.87em;\n"+
+"  top: 0.84em;\n"+
+"  display: block;\n"+
+"  background-color: rgba(100, 100, 100, 0.8);\n"+
+"}\n"+
+"menu .pause:after {\n"+
+"  left: 1.62em;\n"+
+"}\n"+
+"menu .pause:hover:before,\n"+
+"menu .pause:hover:after {\n"+
+"  background-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.medium {\n"+
+"  /* Play */\n"+
+"  /* Stop */\n"+
+"  /* Fast-Forward */\n"+
+"  /* Rewind */\n"+
+"  /* Pause */\n"+
+"}\n"+
+"menu.medium button {\n"+
+"  position: relative;\n"+
+"  display: inline-block;\n"+
+"  padding: .6em;\n"+
+"  background: linear-gradient(#ffffff, #cccccc), #c9c5c9;\n"+
+"  border-radius: 10em;\n"+
+"  border: 0 solid #d0d0d0;\n"+
+"  width: 5em;\n"+
+"  height: 5em;\n"+
+"  margin-right: 20px;\n"+
+"  box-shadow: 0 0.3em 0.35em rgba(0, 0, 0, 0.4);\n"+
+"}\n"+
+"menu.medium button:hover {\n"+
+"  background: linear-gradient(#f5f5f5, #b9b9b9), #c9c5c9;\n"+
+"}\n"+
+"menu.medium button:before,\n"+
+"menu.medium button:after {\n"+
+"  position: absolute;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu.medium button:active {\n"+
+"  top: 0.25em;\n"+
+"  box-shadow: 0 0.1em 0.15em rgba(0, 0, 0, 0.4);\n"+
+"}\n"+
+"menu.medium .play:before {\n"+
+"  z-index: 2;\n"+
+"  top: 1.1em;\n"+
+"  left: 1.8em;\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  border: 1.5em solid transparent;\n"+
+"  border-left-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-left-width: 2.25em;\n"+
+"}\n"+
+"menu.medium .play:hover:before {\n"+
+"  border-left-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.medium .stop:before {\n"+
+"  top: 1.4em;\n"+
+"  left: 1.4em;\n"+
+"  width: 2.35em;\n"+
+"  height: 2.35em;\n"+
+"  background: rgba(100, 100, 100, 0.8);\n"+
+"}\n"+
+"menu.medium .stop:hover:before {\n"+
+"  background: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.medium .ff:before,\n"+
+"menu.medium .ff:after {\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  top: 1.3em;\n"+
+"  border: 1.25em solid transparent;\n"+
+"  border-left-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-left-width: 1.35em;\n"+
+"}\n"+
+"menu.medium .ff:before {\n"+
+"  left: 1.5em;\n"+
+"}\n"+
+"menu.medium .ff:after {\n"+
+"  left: 2.83em;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu.medium .ff:hover:before,\n"+
+"menu.medium .ff:hover:after {\n"+
+"  border-left-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.medium .rw:before,\n"+
+"menu.medium .rw:after {\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  top: 1.3em;\n"+
+"  border: 1.25em solid transparent;\n"+
+"  border-right-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-right-width: 1.35em;\n"+
+"}\n"+
+"menu.medium .rw:before {\n"+
+"  left: 1.1em;\n"+
+"}\n"+
+"menu.medium .rw:after {\n"+
+"  left: -0.25em;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu.medium .rw:hover:after,\n"+
+"menu.medium .rw:hover:before {\n"+
+"  border-right-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.medium .pause:before,\n"+
+"menu.medium .pause:after {\n"+
+"  height: 2.35em;\n"+
+"  width: 0.95em;\n"+
+"  left: 1.45em;\n"+
+"  top: 1.4em;\n"+
+"  display: block;\n"+
+"  background-color: rgba(100, 100, 100, 0.8);\n"+
+"}\n"+
+"menu.medium .pause:after {\n"+
+"  left: 2.7em;\n"+
+"}\n"+
+"menu.medium .pause:hover:before,\n"+
+"menu.medium .pause:hover:after {\n"+
+"  background-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.small {\n"+
+"  /* Play */\n"+
+"  /* Stop */\n"+
+"  /* Fast-Forward */\n"+
+"  /* Rewind */\n"+
+"  /* Pause */\n"+
+"}\n"+
+"menu.small button {\n"+
+"  position: relative;\n"+
+"  display: inline-block;\n"+
+"  padding: .6em;\n"+
+"  background: linear-gradient(#ffffff, #cccccc), #c9c5c9;\n"+
+"  border-radius: 10em;\n"+
+"  border: 0 solid #d0d0d0;\n"+
+"  width: 3em;\n"+
+"  height: 3em;\n"+
+"  margin-right: 20px;\n"+
+"  box-shadow: 0 0.18em 0.21em rgba(0, 0, 0, 0.4);\n"+
+"}\n"+
+"menu.small button:hover {\n"+
+"  background: linear-gradient(#f5f5f5, #b9b9b9), #c9c5c9;\n"+
+"}\n"+
+"menu.small button:before,\n"+
+"menu.small button:after {\n"+
+"  position: absolute;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu.small button:active {\n"+
+"  top: 0.15em;\n"+
+"  box-shadow: 0 0.06em 0.09em rgba(0, 0, 0, 0.4);\n"+
+"}\n"+
+"menu.small .play:before {\n"+
+"  z-index: 2;\n"+
+"  top: 0.66em;\n"+
+"  left: 1.08em;\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  border: 0.9em solid transparent;\n"+
+"  border-left-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-left-width: 1.35em;\n"+
+"}\n"+
+"menu.small .play:hover:before {\n"+
+"  border-left-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.small .stop:before {\n"+
+"  top: 0.84em;\n"+
+"  left: 0.84em;\n"+
+"  width: 1.41em;\n"+
+"  height: 1.41em;\n"+
+"  background: rgba(100, 100, 100, 0.8);\n"+
+"}\n"+
+"menu.small .stop:hover:before {\n"+
+"  background: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.small .ff:before,\n"+
+"menu.small .ff:after {\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  top: 0.78em;\n"+
+"  border: 0.75em solid transparent;\n"+
+"  border-left-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-left-width: 0.81em;\n"+
+"}\n"+
+"menu.small .ff:before {\n"+
+"  left: 0.9em;\n"+
+"}\n"+
+"menu.small .ff:after {\n"+
+"  left: 1.698em;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu.small .ff:hover:before,\n"+
+"menu.small .ff:hover:after {\n"+
+"  border-left-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.small .rw:before,\n"+
+"menu.small .rw:after {\n"+
+"  width: 0;\n"+
+"  height: 0;\n"+
+"  top: 0.78em;\n"+
+"  border: 0.75em solid transparent;\n"+
+"  border-right-color: rgba(100, 100, 100, 0.8);\n"+
+"  border-right-width: 0.81em;\n"+
+"}\n"+
+"menu.small .rw:before {\n"+
+"  left: 0.66em;\n"+
+"}\n"+
+"menu.small .rw:after {\n"+
+"  left: -0.15em;\n"+
+"  content: \" \";\n"+
+"}\n"+
+"menu.small .rw:hover:after,\n"+
+"menu.small .rw:hover:before {\n"+
+"  border-right-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"menu.small .pause:before,\n"+
+"menu.small .pause:after {\n"+
+"  height: 1.41em;\n"+
+"  width: 0.57em;\n"+
+"  left: 0.87em;\n"+
+"  top: 0.84em;\n"+
+"  display: block;\n"+
+"  background-color: rgba(100, 100, 100, 0.8);\n"+
+"}\n"+
+"menu.small .pause:after {\n"+
+"  left: 1.62em;\n"+
+"}\n"+
+"menu.small .pause:hover:before,\n"+
+"menu.small .pause:hover:after {\n"+
+"  background-color: rgba(36, 36, 36, 0.8);\n"+
+"}\n"+
+"/*\n"+
+"The buttons mixin that defines the buttons styles, the @size must be defined to set the relative size\n"+
+"*/\n"+
+"/*\n"+
+"Other Styles\n"+
+"*/\n"+
+"body {\n"+
+"  background: #c1c1c1;\n"+
+"}\n"+
+"\n"+
+"\n"+
+"\n"+
+"\n"+
+"/* ///////////////////////////////// */\n"+
+"\n"+
+"\n"+
+".browsercast-time-label, .browsercast-total-time-label {\n"+
+"    z-index: 1;\n"+
+"    background-color: grey;\n"+
+"    font-family: lato;\n"+
+"    color: #DDD;\n"+
+"    text-shadow: #555 1px 1px 1px;\n"+
+"    padding: 0 5px;\n"+
+"    border-radius: 2px;\n"+
+"    font-size: 10px;\n"+
+"    display: inline-block;\n"+
+"    position: absolute;\n"+
+"}\n"+
+".browsercast-total-time-label {\n"+
+"    right: 0%;\n"+
+"    bottom: -17px;\n"+
+"    background-color: #333;\n"+
+"    transform: translate(50%, 0) translate(-3px, 0);\n"+
+"}\n"+
+".browsercast-time-label {\n"+
+"    z-index: 2;\n"+
+"    left: 0%;\n"+
+"    transition: left 200ms linear;\n"+
+"    bottom: -17px;\n"+
+"    transform: translate(-50%, 0) translate(-3px, 0);\n"+
+"}\n"+
+".browsercast-time-label:after {\n"+
+"    content: ' ';\n"+
+"    height: 0; \n"+
+"    position: absolute;\n"+
+"    width: 0;\n"+
+"    \n"+
+"    border: 8px solid transparent;\n"+
+"    border-bottom-color: grey;\n"+
+"    \n"+
+"    bottom: 100%;\n"+
+"    left: 50%;\n"+
+"    margin-left: -7px;\n"+
+"}\n"+
+"\n"+
+"\n"+
+"/* ///////////////////////// */\n"+
+"menu {\n"+
+"    padding: 0;\n"+
+"    margin: 0;\n"+
+"}\n"+
+"\n"+
+"menu .playpause {\n"+
+"    position: absolute;\n"+
+"    left: 0;\n"+
+"    top: 0;\n"+
+"    font-size: 12px;\n"+
+"    margin: 0; padding: 0;\n"+
+"}\n"+
+"\n"+
+".browsercast-markers {\n"+
+"    position: absolute;\n"+
+"    top: 0; height: 10px;\n"+
+"    left: 3em; right: 1em;\n"+
+"    background-color: #e3e3e3;\n"+
+"}\n"+
+"") }
