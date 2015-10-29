@@ -733,7 +733,7 @@ div.chapter h2 {
 }
 
 /* Collapse navbar */
-@media (max-width: 993px) {
+@media (max-width: 1200px) {
     .navbar-header {
         float: none;
 	min-height: 80px;
