@@ -37,6 +37,11 @@
     background: unset;
   }
 
+  /* don't wrap code samples inside paragraphs */
+  p > code {
+    white-space: nowrap;
+  }
+
   pre.sourceCode::before,
   pre.input::before. {
       content: "Input:";

@@ -185,6 +185,11 @@ pre.error {
     color: Red;
 }
 
+/* don't wrap code samples inside paragraphs */
+p > code {
+    white-space: nowrap;
+}
+
 @media (max-width: 700px) {
     div.banner a img {
         padding: 20px 0px;
