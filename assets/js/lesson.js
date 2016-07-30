@@ -2,6 +2,18 @@
 $("table").addClass("table table-striped");
 
 
+// Create an ID for each definition term so that references can link
+// straight to terms.
+$("dt").each(function(){
+    var slug = $.trim($(this).text()).
+               replace(/[^a-z0-9-]/gi, "-").
+               replace(/-+/g, "-").
+               replace(/^-|-$/g, "").
+               toLowerCase();
+    $(this).attr("id", slug);
+});
+
+
 // Handle foldable challenges and solutions (on click and at start).
 $(".challenge,.discussion,.solution").click(function(event) {
     var trigger = $(event.target).has(".fold-unfold").size() > 0
