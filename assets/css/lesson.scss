@@ -112,14 +112,21 @@ $codeblock-padding: 5px !default;
 // Override Bootstrap settings.
 //----------------------------------------
 
+// Code doesn't have a special background color.
 code {
   padding: 2px 5px;
   color: #3d90d9;
   background-color: #e7e7e7;
 }
 
+// Images are no larger than the page.
 img {
   max-width: 100%;
+}
+
+// Don't line-wrap code samples inlined in paragraphs.
+p > code {
+  white-space: nowrap;
 }
 
 //----------------------------------------
