@@ -185,6 +185,11 @@ title: "Lesson Title"
 # or if it's a URL, "https://gitter.im/username/ProjectName".
 contact: "mailto:lessons@software-carpentry.org"
 
+# Filename matching webserver config's default index.
+# Set to "index.html" for rendering an offline browsable lesson
+#  but can be left blank when rendering for a webserver
+index: ""
+
 #------------------------------------------------------------
 # Generic settings (should not need to change).
 #------------------------------------------------------------
