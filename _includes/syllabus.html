@@ -1,6 +1,7 @@
 {% comment %}
   Display syllabus in tabular form.
   Days are displayed if at least one episode has 'start = true'.
+  Days are displayed as Parts if at least one episode has 'part = true'.
 {% endcomment %}
 <div class="syllabus">
   <h2 id="schedule">Schedule</h2>
@@ -8,8 +9,12 @@
   {% assign lesson_number = 0 %}
   {% assign day = 0 %}
   {% assign multiday = false %}
+  {% assign partnotday = false %}
   {% for episode in site.episodes %}
     {% if episode.start %}{% assign multiday = true %}{% break %}{% endif %}
+  {% endfor %}
+  {% for episode in site.episodes %}
+    {% if episode.parts %}{% assign partnotday = true %}{% break %}{% endif %}
   {% endfor %}
   {% assign current = site.start_time %}
 
@@ -33,12 +38,14 @@
           <td class="col-md-7"></td>
         </tr>
       {% endif %}
-      {% assign current = site.start_time %} {% comment %}Re-set start time of this episode to general daily start time {% endcomment %}
+      {% if partnotday %}{% else %}
+        {% assign current = site.start_time %} {% comment %}Re-set start time of this episode to general daily start time {% endcomment %}
+      {% endif %}
     {% endif %}
     {% assign hours = current | divided_by: 60 %}
     {% assign minutes = current | modulo: 60 %}
     <tr>
-      {% if multiday %}<td class="col-md-1">{% if episode.start %}Day {{ day }}{% endif %}</td>{% endif %}
+      {% if multiday %}<td class="col-md-1">{% if episode.start %}{% if partnotday %}Part{% else %}Day{% endif %} {{ day }}{% endif %}</td>{% endif %}
       <td class="{% if multiday %}col-md-1{% else %}col-md-2{% endif %}">{% if hours < 10 %}0{% endif %}{{ hours }}:{% if minutes < 10 %}0{% endif %}{{ minutes }}</td>
       <td class="col-md-3">
         {% assign lesson_number = lesson_number | plus: 1 %}
