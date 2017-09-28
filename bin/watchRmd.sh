@@ -1,3 +1,3 @@
 #!/bin/bash
-while fswatch --event=Updated _episodes_rmd/*.Rmd; do make lesson-md; done
+fswatch --event=Updated _episodes_rmd/*.Rmd | make lesson-md
 
