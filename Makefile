@@ -16,6 +16,9 @@ all : commands
 commands :
 	@grep -h -E '^##' ${MAKEFILES} | sed -e 's/## //g'
 
+## serve-rmd        : run a local server, updating Rmd file automatically
+serve-rmd: lesson-md lesson-watchrmd serve
+
 ## serve            : run a local server.
 serve : lesson-md
 	${JEKYLL} serve
@@ -54,7 +57,7 @@ workshop-check :
 ## ----------------------------------------
 ## Commands specific to lesson websites.
 
-.PHONY : lesson-check lesson-md lesson-files lesson-fixme
+.PHONY : lesson-check lesson-md lesson-files lesson-fixme lesson-watchrmd
 
 # RMarkdown files
 RMD_SRC = $(wildcard _episodes_rmd/??-*.Rmd)
@@ -83,9 +86,11 @@ HTML_DST = \
 ## lesson-md        : convert Rmarkdown files to markdown
 lesson-md : ${RMD_DST}
 
-# Use of .NOTPARALLEL makes rule execute only once
-${RMD_DST} : ${RMD_SRC}
-	@bin/knit_lessons.sh ${RMD_SRC}
+lesson-watchrmd:
+	@bin/watchRmd.sh &
+
+_episodes/%.md: _episodes_rmd/%.Rmd
+	@bin/knit_lessons.sh $< $@
 
 ## lesson-check     : validate lesson Markdown.
 lesson-check :
