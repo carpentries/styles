@@ -107,6 +107,7 @@ pre,
 samp {
   font-family: monospace, monospace;
   font-size: 1em;
+  white-space: nowrap;
 }
 button,
 input,
