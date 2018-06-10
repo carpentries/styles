@@ -8,10 +8,15 @@ trim_trailing_whitespace = true
 [*.md]
 indent_size = 2
 indent_style = space
+max_line_length = 100
+
+[*.r]
+max_line_length = 80
 
 [*.py]
 indent_size = 4
 indent_style = space
+max_line_length = 79
 
 [*.sh]
 end_of_line = lf
