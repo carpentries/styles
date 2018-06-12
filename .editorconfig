@@ -8,7 +8,7 @@ trim_trailing_whitespace = true
 [*.md]
 indent_size = 2
 indent_style = space
-max_line_length = 100
+max_line_length = 100  # Please keep this in sync with bin/lesson_check.py!
 
 [*.r]
 max_line_length = 80
