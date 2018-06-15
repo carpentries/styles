@@ -2,7 +2,7 @@
 # Values for this lesson.
 #------------------------------------------------------------
 
-# Which carpentry is this ("swc", "dc", or "lc")?
+# Which carpentry is this ("swc", "dc", "lc", or "cp")?
 carpentry: "swc"
 
 # Overall title for pages.
