@@ -29,7 +29,6 @@ title: Figures
 
             var htitle = document.createElement('h2');
             htitle.innerHTML = 'Episode "' + h1text + '"';
-            htitle.style = "margin-top: 100px;";
             article_here.appendChild(htitle);
 
             var hr = document.createElement('hr');
@@ -41,12 +40,10 @@ title: Figures
 
               var title = document.createElement('h3');
               title.innerHTML = "Figure " + image_num + ". " + image.alt;
-              title.style = "margin-top: 20px;"
               article_here.appendChild(title);
 
               var img = document.createElement('img');
               img.src = image.src;
-              img.style = "display: block; margin: 20px auto;"
               article_here.appendChild(img);
 
               if (image_num < images.length) {
@@ -67,7 +64,7 @@ title: Figures
 Create anchor for each one of the episodes.
 {% endcomment %}
 {% for episode in site.episodes %}
-<article id="{{ episode.url }}"></article>
+<article id="{{ episode.url }}" class="figures"></article>
 {% endfor %}
 
 {% include links.md %}
