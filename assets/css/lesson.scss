@@ -145,6 +145,14 @@ img {
 // Miscellaneous.
 //----------------------------------------
 
+article.figures p {
+  text-align: center;
+}
+article.figures img {
+  display: block;
+  margin: 20px auto;
+}
+
 .maintitle {
   text-align: center;
 }
