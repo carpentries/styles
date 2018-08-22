@@ -31,9 +31,6 @@ title: Figures
             htitle.innerHTML = 'Episode "' + h1text + '"';
             article_here.appendChild(htitle);
 
-            var hr = document.createElement('hr');
-            article_here.appendChild(hr);
-
             var image_num = 0;
             for (let image of images) {
               image_num++;
