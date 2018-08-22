@@ -35,8 +35,8 @@ title: Figures
             for (let image of images) {
               image_num++;
 
-              var title = document.createElement('h3');
-              title.innerHTML = "Figure " + image_num + ". " + image.alt;
+              var title = document.createElement('p');
+              title.innerHTML = "<strong>Figure " + image_num + ".</strong> " + image.alt;
               article_here.appendChild(title);
 
               var img = document.createElement('img');
