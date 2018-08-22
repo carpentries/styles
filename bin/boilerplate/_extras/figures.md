@@ -28,7 +28,7 @@ title: Figures
             var h1text = htmlDocArticle.getElementsByTagName("h1")[0].innerHTML;
 
             var htitle = document.createElement('h2');
-            htitle.innerHTML = 'Episode "' + h1text + '"';
+            htitle.innerHTML = h1text;
             article_here.appendChild(htitle);
 
             var image_num = 0;
