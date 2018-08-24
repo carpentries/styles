@@ -23,11 +23,11 @@ docker-serve :
 
 ## serve            : run a local server.
 serve : lesson-md
-	${JEKYLL} serve
+	if [[ $$(${JEKYLL} --version) =~ "jekyll 3.7" ]]; then ${JEKYLL} serve; else echo "${JEKYLL} ${JEKYLL_VERSION} required but encounter $$(${JEKYLL} --version)"; fi
 
 ## site             : build files but do not run a server.
 site : lesson-md
-	${JEKYLL} build
+	if [[ $$(${JEKYLL} --version) =~ "jekyll 3.7" ]]; then ${JEKYLL} site; else echo "${JEKYLL} ${JEKYLL_VERSION} required but encounter $$(${JEKYLL} --version)"; fi
 
 # repo-check        : check repository settings.
 repo-check :
