@@ -1,149 +1,168 @@
-## ========================================
-## Commands for both workshop and lesson websites.
+# Use /bin/bash instead of /bin/sh
+export SHELL = /bin/bash
 
-# Settings
-MAKEFILES=Makefile $(wildcard *.mk)
-JEKYLL_VERSION=3.8.5
-JEKYLL=bundle install --path .vendor/bundle && bundle update && bundle exec jekyll
-PARSER=bin/markdown_ast.rb
-DST=_site
+# Required variables and targets
+include required.mk
 
-# Check Python 3 is installed and determine if it's called via python3 or python
-# (https://stackoverflow.com/a/4933395)
-PYTHON3_EXE := $(shell which python3 2>/dev/null)
-ifneq (, $(PYTHON3_EXE))
-  ifeq (,$(findstring Microsoft/WindowsApps/python3,$(subst \,/,$(PYTHON3_EXE))))
-    PYTHON := python3
-  endif
-endif
+# Lesson-specific variables and targets (if any)
+skip_include = required.mk
+EXTRA_MAKEFILES := $(sort $(filter-out $(skip_include), $(wildcard *.mk)))
 
-ifeq (,$(PYTHON))
-  PYTHON_EXE := $(shell which python 2>/dev/null)
-  ifneq (, $(PYTHON_EXE))
-    PYTHON_VERSION_FULL := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
-    PYTHON_VERSION_MAJOR := $(word 1,${PYTHON_VERSION_FULL})
-    ifneq (3, ${PYTHON_VERSION_MAJOR})
-      $(error "Your system does not appear to have Python 3 installed.")
-    endif
-    PYTHON := python
-  else
-      $(error "Your system does not appear to have any Python installed.")
-  endif
+ifneq (,$(EXTRA_MAKEFILES))
+  $(info Including $(EXTRA_MAKEFILES))
+  include $(EXTRA_MAKEFILES)
 endif
 
 
-# Controls
-.PHONY : commands clean files
-.NOTPARALLEL:
-all : commands
+## I. Commands for both workshop and lesson websites.
+## =================================================
 
-## commands         : show all commands.
-commands :
-	@grep -h -E '^##' ${MAKEFILES} | sed -e "s/## //g"
+## * serve            : Render website and run a local server
+serve : lesson-md
+ifneq (, $(JEKYLL_SERVE_CMD))
+	@$(JEKYLL_SERVE_CMD)
+else
+$(error Jekyll not found!)
+endif
 
-## docker-serve     : use docker to build the site
+## * site             : build files but do not run a server.
+site : lesson-md
+ifneq (, $(JEKYLL_BUILD_CMD))
+	@$(JEKYLL_BUILD_CMD)
+else
+$(error Jekyll not found!)
+endif
+
+## * docker-serve     : use docker to serve the site.
 docker-serve :
+ifneq (, $(DOCKER))
 	docker run --rm -it --volume ${PWD}:/srv/jekyll \
            --volume=${PWD}/.docker-vendor/bundle:/usr/local/bundle \
            -p 127.0.0.1:4000:4000 \
            jekyll/jekyll:${JEKYLL_VERSION} \
            bin/run-make-docker-serve.sh
+else
+$(error Docker not found!)
+endif
 
-## serve            : run a local server.
-serve : lesson-md
-	${JEKYLL} serve
-
-## site             : build files but do not run a server.
-site : lesson-md
-	${JEKYLL} build
-
-# repo-check        : check repository settings.
+## * repo-check       : check repository settings.
 repo-check :
+ifneq (, $(PYTHON))
 	@bin/repo_check.py -s .
+else
+$(error Python3 not found!)
+endif
 
-## clean            : clean up junk files.
+## * clean            : clean up junk files.
 clean :
-	@rm -rf ${DST}
-	@rm -rf .sass-cache
+	@$(JEKYLL_CLEAN_CMD)
 	@rm -rf bin/__pycache__
-	@find . -name .DS_Store -exec rm {} \;
-	@find . -name '*~' -exec rm {} \;
-	@find . -name '*.pyc' -exec rm {} \;
+	@find . \( -name .DS_Store -o -name '*~' -o -name '*.pyc' \) -delete
 
-## clean-rmd        : clean intermediate R files (that need to be committed to the repo).
+## * clean-rmd        : clean intermediate R files (that need to be committed to the repo).
 clean-rmd :
 	@rm -rf ${RMD_DST}
 	@rm -rf fig/rmd-*
 
-## ----------------------------------------
-## Commands specific to workshop websites.
+##
+## II. Commands specific to workshop websites.
+## =======================================
 
-.PHONY : workshop-check
-
-## workshop-check   : check workshop homepage.
+## * workshop-check   : check workshop homepage.
 workshop-check :
+ifneq (, $(PYTHON))
 	@${PYTHON} bin/workshop_check.py .
+else
+$(error Python3 not found!)
+endif
 
-## ----------------------------------------
-## Commands specific to lesson websites.
+##
+## III. Commands specific to lesson websites.
+## =====================================
 
-.PHONY : lesson-check lesson-md lesson-files lesson-fixme
-
-# RMarkdown files
-RMD_SRC = $(wildcard _episodes_rmd/??-*.Rmd)
-RMD_DST = $(patsubst _episodes_rmd/%.Rmd,_episodes/%.md,$(RMD_SRC))
-
-# Lesson source files in the order they appear in the navigation menu.
-MARKDOWN_SRC = \
-  index.md \
-  CODE_OF_CONDUCT.md \
-  setup.md \
-  $(sort $(wildcard _episodes/*.md)) \
-  reference.md \
-  $(sort $(wildcard _extras/*.md)) \
-  LICENSE.md
-
-# Generated lesson files in the order they appear in the navigation menu.
-HTML_DST = \
-  ${DST}/index.html \
-  ${DST}/conduct/index.html \
-  ${DST}/setup/index.html \
-  $(patsubst _episodes/%.md,${DST}/%/index.html,$(sort $(wildcard _episodes/*.md))) \
-  ${DST}/reference/index.html \
-  $(patsubst _extras/%.md,${DST}/%/index.html,$(sort $(wildcard _extras/*.md))) \
-  ${DST}/license/index.html
-
-## lesson-md        : convert Rmarkdown files to markdown
+## * lesson-md        : convert Rmarkdown files to markdown
+ifneq (None, $(RMD_SRC))
 lesson-md : ${RMD_DST}
+else
+lesson-md :
+	@:
+endif
 
 _episodes/%.md: _episodes_rmd/%.Rmd
+ifneq (, $(RSCRIPT))
 	@bin/knit_lessons.sh $< $@
+endif
 
-## lesson-check     : validate lesson Markdown.
+## * lesson-check     : validate lesson Markdown.
 lesson-check : lesson-fixme
+ifneq (, $(PYTHON))
 	@${PYTHON} bin/lesson_check.py -s . -p ${PARSER} -r _includes/links.md
+else
+$(error Python not found!)
+endif
 
-## lesson-check-all : validate lesson Markdown, checking line lengths and trailing whitespace.
+## * lesson-check-all : validate lesson Markdown, checking line lengths and trailing whitespace.
 lesson-check-all :
+ifneq (, $(PYTHON))
 	@${PYTHON} bin/lesson_check.py -s . -p ${PARSER} -r _includes/links.md -l -w --permissive
+else
+$(error Python3 not found!)
+endif
 
-## unittest         : run unit tests on checking tools.
+## * unittest         : run unit tests on checking tools.
 unittest :
+ifneq (, $(PYTHON))
 	@${PYTHON} bin/test_lesson_check.py
+else
+$(error Python3 not found!)
+endif
 
-## lesson-files     : show expected names of generated files for debugging.
+## * lesson-files     : show expected names of generated files for debugging.
 lesson-files :
-	@echo 'RMD_SRC:' ${RMD_SRC}
-	@echo 'RMD_DST:' ${RMD_DST}
-	@echo 'MARKDOWN_SRC:' ${MARKDOWN_SRC}
-	@echo 'HTML_DST:' ${HTML_DST}
+	@echo RMD_SRC: ${RMD_SRC}
+	@echo RMD_DST: ${RMD_DST}
+	@echo MARKDOWN_SRC: ${MARKDOWN_SRC}
+	@echo HTML_DST: ${HTML_DST}
 
-## lesson-fixme     : show FIXME markers embedded in source files.
+## * lesson-fixme     : show FIXME markers embedded in source files.
 lesson-fixme :
-	@fgrep -i -n FIXME ${MARKDOWN_SRC} || true
+	@fgrep -i -n FIXME ${MARKDOWN_SRC} 2>/dev/null || true
 
-#-------------------------------------------------------------------------------
-# Include extra commands if available.
-#-------------------------------------------------------------------------------
 
--include commands.mk
+##
+## IV. Auxililary (plumbing) commands
+## ================================
+
+## * commands         : show all commands.
+commands :
+	@sed -n -e '/^##/s|^##[[:space:]]*||p' $(MAKEFILE_LIST)
+
+## * install-tools    : install gems required to render site locally.
+install-tools : bundler Gemfile.lock
+ifeq (, $(JEKYLL))
+	@bundle install
+else
+	$(info Jekyll appears to be installed)
+	@:
+endif
+
+## * Gemfile.lock     : update Gemfile.lock
+Gemfile.lock : Gemfile bundler
+	@bundle lock --update
+
+## * bundler          : install Bundler
+bundler : gem
+ifeq (, $(BUNDLE))
+	@gem install bundler
+else
+	$(info Bundler appears to be installed!)
+	@:
+endif
+
+gem :
+ifeq (, $(GEM_CMD))
+	$(error 'gem' command not found! Please install Ruby)
+else
+	$(info Gem appears to be installed!)
+	@:
+endif
