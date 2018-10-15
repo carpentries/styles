@@ -3,14 +3,17 @@
 
 # Settings
 MAKEFILES=Makefile $(wildcard *.mk)
-JEKYLL=jekyll
-JEKYLL_VERSION=3.7.3
+GITHUB_JEKYLL_VERSION=3.7.3
 PARSER=bin/markdown_ast.rb
 DST=_site
 
 # Controls
-.PHONY : commands clean files
+.PHONY : all clean clean-rmd commands docker-serve files \
+  lesson-check lesson-check-all lesson-files lesson-fixme lesson-md \
+  repo-check serve site unittest workshop-check jekyll bundler
+
 .NOTPARALLEL:
+
 all : commands
 
 ## commands         : show all commands.
@@ -19,15 +22,24 @@ commands :
 
 ## docker-serve     : use docker to build the site
 docker-serve :
-	docker run --rm -it -v ${PWD}:/srv/jekyll -p 127.0.0.1:4000:4000 jekyll/jekyll:${JEKYLL_VERSION} make serve
+	@docker run --rm -it -v ${PWD}:/srv/jekyll -p 127.0.0.1:4000:4000 jekyll/jekyll:${GITHUB_JEKYLL_VERSION} jekyll serve
 
 ## serve            : run a local server.
-serve : lesson-md
-	${JEKYLL} serve
+serve : lesson-md jekyll
+	@jekyll serve || bundle exec jekyll serve
 
 ## site             : build files but do not run a server.
-site : lesson-md
-	${JEKYLL} build
+site : lesson-md jekyll
+	@jekyll build || bundle exec jekyll build
+
+jekyll : bundler Gemfile.lock Gemfile
+	@which jekyll 1>/dev/null 2>/dev/null || bundle
+
+Gemfile.lock : Gemfile bundler
+	@bundle 1>/dev/null 2>/dev/null
+
+bundler :
+	@which bundle 1>/dev/null 2>/dev/null || echo "Please install Ruby!" >&2
 
 # repo-check        : check repository settings.
 repo-check :
@@ -50,16 +62,12 @@ clean-rmd :
 ## ----------------------------------------
 ## Commands specific to workshop websites.
 
-.PHONY : workshop-check
-
 ## workshop-check   : check workshop homepage.
 workshop-check :
 	@bin/workshop_check.py .
 
 ## ----------------------------------------
 ## Commands specific to lesson websites.
-
-.PHONY : lesson-check lesson-md lesson-files lesson-fixme
 
 # RMarkdown files
 RMD_SRC = $(wildcard _episodes_rmd/??-*.Rmd)
