@@ -22,8 +22,12 @@ PYTHON ?= $(shell which python3)
 RSCRIPT ?= $(shell which Rscript)
 
 # Jekyll version on GitHub
-# Sync with https://pages.github.com/versions/
-GITHUB_JEKYLL_VERSION = 3.7.4
+ifneq (, $(wildcard ./Gemfile.lock))
+  GITHUB_JEKYLL_VERSION := $(shell sed -n '/jekyll\ (=.*)/s|.*(= \(.*\))|\1|p' Gemfile.lock)
+else
+  # Sync with https://pages.github.com/versions/
+  GITHUB_JEKYLL_VERSION = 3.7.4
+endif
 
 ifneq (, $(JEKYLL))
 JEKYLL_SERVE_CMD := jekyll serve -H $(HOST) -P $(PORT)
