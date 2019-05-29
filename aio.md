@@ -10,4 +10,4 @@ open an issue: https://github.com/carpentries/styles/issues/new
 
 {% include base_path.html %}
 
-{% include aio.md %}
+{% include aio-script.md %}
