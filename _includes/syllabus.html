@@ -22,7 +22,9 @@
     <td class="col-md-3"><a href="{{ relative_root_path }}{% link setup.md %}">Setup</a></td>
     <td class="col-md-7">Download files required for the lesson</td>
   </tr>
-  {% for episode in site.episodes %}
+  {% for epi in site.contents.episodes %}
+    {% for episode in site.episodes %}
+      {% if epi == episode.slug %}
     {% if episode.start %} {% comment %} Starting a new day? {% endcomment %}
       {% assign day = day | plus: 1 %}
       {% if day > 1 %} {% comment %} If about to start day 2 or later, show finishing time for previous day {% endcomment %}
@@ -62,6 +64,9 @@
       </td>
     </tr>
     {% assign current = current | plus: episode.teaching | plus: episode.exercises | plus: episode.break %}
+  {% endif %}
+  {% break %}
+  {% endfor %}
   {% endfor %}
   {% assign hours = current | divided_by: 60 %}
   {% assign minutes = current | modulo: 60 %}
