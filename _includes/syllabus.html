@@ -64,12 +64,12 @@
       </td>
     </tr>
     {% assign current = current | plus: episode.teaching | plus: episode.exercises | plus: episode.break %}
-  {% endif %}
-  {% break %}
-  {% endfor %}
-  {% endfor %}
   {% assign hours = current | divided_by: 60 %}
   {% assign minutes = current | modulo: 60 %}
+  {% break %}
+  {% endif %}
+  {% endfor %}
+  {% endfor %}
   <tr>
     {% if multiday %}<td class="col-md-1"></td>{% endif %}
     <td class="{% if multiday %}col-md-1{% else %}col-md-2{% endif %}">{% if hours < 10 %}0{% endif %}{{ hours }}:{% if minutes < 10 %}0{% endif %}{{ minutes }}</td>
