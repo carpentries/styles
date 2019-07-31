@@ -1,0 +1,31 @@
+{% comment %}
+- subsec: the relevant sub-section of contents from _config.yml
+- collection: the type of page that will be linked to e.g. episodes or extras
+- class: the CSS class to apply to the list.
+- title: dropdown title.
+{% endcomment %}
+
+<li class="dropdown">
+  <a href="{{ relative_root_path }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ include.title }} <span class="caret"></span></a>
+  <ul class="dropdown-menu">
+  {% comment %}Add "Reference" link if this is the Extras menu.{% endcomment %}
+  {% if collection == "extras"}
+    <li><a href="{{ relative_root_path }}{% link reference.md %}">Reference</a></li>
+  {% endif %}
+  {% comment %}List entries according to order in _config.yml. Search to find this page (because Jekyll does not support lookup by key).{% endcomment %}
+  {% for lsn in include.subsec %}
+    {% for item in include.collection %}
+      {% comment %}If there's a match, add a link to the dropdown menu.{% endcomment %}
+      {%- if lsn == item.slug -%}
+        <li><a href="{{ relative_root_path }}{{ item.url }}">{{ item.title }}</a></li>
+      {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+  {% comment %}Add "All-In-One" link if this is the Episodes menu.{% endcomment %}
+  {% if collection == "episodes" %}
+    <li role="separator" class="divider"></li>
+    <li><a href="{{ relative_root_path }}{% link aio.md %}">All in one page (Beta)</a></li>
+  {% endif %}
+  </ul>
+</li>

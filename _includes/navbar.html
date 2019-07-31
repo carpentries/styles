@@ -46,31 +46,15 @@
         {% if site.kind == "lesson" %}
 	{% comment %} Show setup instructions. {% endcomment %}
         <li><a href="{{ relative_root_path }}{% link setup.md %}">Setup</a></li>
-
         {% comment %} Show lesson episodes for lessons. {% endcomment %}
-        <li class="dropdown">
-          <a href="{{ relative_root_path }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Episodes <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            {% for episode in site.episodes %}
-            <li><a href="{{ relative_root_path }}{{ episode.url }}">{{ episode.title }}</a></li>
-            {% endfor %}
-	    <li role="separator" class="divider"></li>
-            <li><a href="{{ relative_root_path }}{% link aio.md %}">All in one page (Beta)</a></li>
-          </ul>
-        </li>
+        {% assign episodes = site.episodes %}
+        {% include navbar_section.html collection=episodes title="Episodes" subsec=site.contents.episodes %}
 	{% endif %}
 
 	{% comment %} Show extras for lessons or if this is the main workshop-template repo (where they contain documentation). {% endcomment %}
 	{% if site.kind == "lesson" %}
-        <li class="dropdown">
-          <a href="{{ relative_root_path }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extras <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{{ relative_root_path }}{% link reference.md %}">Reference</a></li>
-            {% for extra in site.extras %}
-            <li><a href="{{ relative_root_path }}{{ extra.url }}">{{ extra.title }}</a></li>
-            {% endfor %}
-          </ul>
-        </li>
+    {% assign extras = site.extras %}
+    {% include navbar_section.html collection=extras title="Extras" subsec=site.contents.extras %}
 	{% endif %}
 
 	{% comment %} Always show license. {% endcomment %}
