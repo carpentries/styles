@@ -22,7 +22,13 @@
     <td class="col-md-3"><a href="{{ relative_root_path }}{% link setup.md %}">Setup</a></td>
     <td class="col-md-7">Download files required for the lesson</td>
   </tr>
-  {% for epi in site.contents.episodes %}
+  {% comment %}This introduces some redundancy if site.contents is not defined but I think it's the only way to allow numbered and non-numbered episodes without duplicating a huge number of lines to create the table.{% endcomment %}
+  {% if site.contents %}
+    {% assign episodes = site.contents.episodes %}
+  {% else %}
+    {% assign episodes = site.episodes %}
+  {% endif %}
+  {% for epi in episodes %}
     {% for episode in site.episodes %}
       {% if epi == episode.slug %}
     {% if episode.start %} {% comment %} Starting a new day? {% endcomment %}
