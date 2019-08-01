@@ -12,25 +12,27 @@ need to re-assign it here
 <div class="row">
   <div class="col-xs-1">
     <h3 class="text-left">
-      {% assign prev_epi = "NONE" %}
-      {% assign prev_url = false %}
-      {% assign prev = false %}
-      {% for epi in site.contents.episodes %}
-        {% if epi == page.slug %}
-          {% if prev_epi %}
-            {% assign prev_epi = prev %}
+      {% if site.contents %}
+        {% assign prev = false %}
+        {% for epi in site.contents.episodes %}
+          {% if epi == page.slug %}
+            {% if prev %}
+              {% assign prev_epi = prev %}
+            {% endif %}
+            {% break %}
+          {% else %}
+            {% assign prev = epi %}
           {% endif %}
-          {% break %}
-        {% else %}
-          {% assign prev = epi %}
-        {% endif %}
-      {% endfor %}
-      {% for episode in site.episodes %}
-        {% if prev_epi == episode.slug %}
-          {% assign prev_url = episode.url %}
-          {% break %}
-        {% endif %}
-      {% endfor %}
+        {% endfor %}
+        {% for episode in site.episodes %}
+          {% if prev_epi == episode.slug %}
+            {% assign prev_url = episode.url %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% assign prev_url = page.previous.url %}
+      {% endif %}
       {% if prev_url %}
       <a href="{{ relative_root_path }}{{ prev_url }}"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
       {% else %}
@@ -45,23 +47,25 @@ need to re-assign it here
   </div>
   <div class="col-xs-1">
     <h3 class="text-right">
-      {% assign next_epi = "NONE" %}
-      {% assign next_url = false %}
-      {% assign next = false %}
-      {% for epi in site.contents.episodes %}
-        {% if next %}
-          {% assign next_epi = epi %}
-          {% break %}
-        {% elsif epi == page.slug %}
-          {% assign next = true %}
-        {% endif %}
-      {% endfor %}
-      {% for episode in site.episodes %}
-        {% if next_epi == episode.slug %}
-          {% assign next_url = episode.url %}
-          {% break %}
-        {% endif %}
-      {% endfor %}
+      {% if site.contents %}
+        {% assign next = false %}
+        {% for epi in site.contents.episodes %}
+          {% if next %}
+            {% assign next_epi = epi %}
+            {% break %}
+          {% elsif epi == page.slug %}
+            {% assign next = true %}
+          {% endif %}
+        {% endfor %}
+        {% for episode in site.episodes %}
+          {% if next_epi == episode.slug %}
+            {% assign next_url = episode.url %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% assign next_url = page.next.url %}
+      {% endif %}
       {% if next_url %}
       <a href="{{ relative_root_path }}{{ next_url }}"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
       {% else %}
