@@ -10,7 +10,7 @@
   <ul class="dropdown-menu">
     {% comment %}List extras by alphabetical order if this is the Extras menu and if site.contents is not defined.{% endcomment %}
     {% comment %}But first add "Reference" link at the top.{% endcomment %}
-  {% if collection == "extras"}
+  {% if include.title == "Extras" %}
     <li><a href="{{ relative_root_path }}{% link reference.md %}">Reference</a></li>
     {% unless site.contents %}
       {% for extra in site.extras %}
@@ -23,7 +23,7 @@
     {% for lsn in include.subsec %}
       {% for item in include.collection %}
         {% comment %}If there's a match, add a link to the dropdown menu.{% endcomment %}
-        {%- if lsn == item.slug -%}
+        {% if lsn == item.slug %}
           <li><a href="{{ relative_root_path }}{{ item.url }}">{{ item.title }}</a></li>
         {% break %}
         {% endif %}
@@ -32,9 +32,9 @@
   {% endif %}
   {% comment %}List episodes by numeric order if this is the Episodes menu and if site.contents is not defined.{% endcomment %}
   {% comment %}Then add "All-In-One" link.{% endcomment %}
-  {% if collection == "episodes" %}
+  {% if include.title == "Episodes" %}
     {% unless site.contents %}
-      {% for extra in site.episodes %}
+      {% for episode in site.episodes %}
         <li><a href="{{ relative_root_path }}{{ episode.url }}">{{ episode.title }}</a></li>
       {% endfor %}
     {% endunless %}

@@ -29,52 +29,57 @@
     {% assign episodes = site.episodes %}
   {% endif %}
   {% for epi in episodes %}
+    {% if epi.slug %}
+      {% assign epislug = epi.slug %}{% comment %}Is there a way to achieve this by directly accessing the slugs when creating the episodes array above?{% endcomment %}}
+    {% else %}
+      {% assign epislug = epi %}
+    {% endif %}
     {% for episode in site.episodes %}
-      {% if epi == episode.slug %}
-    {% if episode.start %} {% comment %} Starting a new day? {% endcomment %}
-      {% assign day = day | plus: 1 %}
-      {% if day > 1 %} {% comment %} If about to start day 2 or later, show finishing time for previous day {% endcomment %}
+      {% if epislug == episode.slug %}
+          {% if episode.start %} {% comment %} Starting a new day? {% endcomment %}
+            {% assign day = day | plus: 1 %}
+            {% if day > 1 %} {% comment %} If about to start day 2 or later, show finishing time for previous day {% endcomment %}
+              {% assign hours = current | divided_by: 60 %}
+              {% assign minutes = current | modulo: 60 %}
+              <tr>
+                {% if multiday %}<td class="col-md-1"></td>{% endif %}
+                <td class="{% if multiday %}col-md-1{% else %}col-md-2{% endif %}">{% if hours < 10 %}0{% endif %}{{ hours }}:{% if minutes < 10 %}0{% endif %}{{ minutes }}</td>
+                <td class="col-md-3">Finish</td>
+                <td class="col-md-7"></td>
+              </tr>
+            {% endif %}
+            {% assign current = site.start_time %} {% comment %}Re-set start time of this episode to general daily start time {% endcomment %}
+          {% endif %}
+          {% assign hours = current | divided_by: 60 %}
+          {% assign minutes = current | modulo: 60 %}
+          <tr>
+            {% if multiday %}<td class="col-md-1">{% if episode.start %}Day {{ day }}{% endif %}</td>{% endif %}
+            <td class="{% if multiday %}col-md-1{% else %}col-md-2{% endif %}">{% if hours < 10 %}0{% endif %}{{ hours }}:{% if minutes < 10 %}0{% endif %}{{ minutes }}</td>
+            <td class="col-md-3">
+              {% assign lesson_number = lesson_number | plus: 1 %}
+      	{{ lesson_number }}. <a href="{{ relative_root_path }}{{ episode.url }}">{{ episode.title }}</a>
+            </td>
+            <td class="col-md-7">
+              {% if episode.break %}
+                Break
+              {% else %}
+                {% if episode.questions %}
+                  {% for question in episode.questions %}
+                    {{question|markdownify|strip_html}}
+                    {% unless forloop.last %}
+                    <br/>
+                    {% endunless %}
+                  {% endfor %}
+                {% endif %}
+              {% endif %}
+            </td>
+          </tr>
+          {% assign current = current | plus: episode.teaching | plus: episode.exercises | plus: episode.break %}
         {% assign hours = current | divided_by: 60 %}
         {% assign minutes = current | modulo: 60 %}
-        <tr>
-          {% if multiday %}<td class="col-md-1"></td>{% endif %}
-          <td class="{% if multiday %}col-md-1{% else %}col-md-2{% endif %}">{% if hours < 10 %}0{% endif %}{{ hours }}:{% if minutes < 10 %}0{% endif %}{{ minutes }}</td>
-          <td class="col-md-3">Finish</td>
-          <td class="col-md-7"></td>
-        </tr>
+        {% break %}
       {% endif %}
-      {% assign current = site.start_time %} {% comment %}Re-set start time of this episode to general daily start time {% endcomment %}
-    {% endif %}
-    {% assign hours = current | divided_by: 60 %}
-    {% assign minutes = current | modulo: 60 %}
-    <tr>
-      {% if multiday %}<td class="col-md-1">{% if episode.start %}Day {{ day }}{% endif %}</td>{% endif %}
-      <td class="{% if multiday %}col-md-1{% else %}col-md-2{% endif %}">{% if hours < 10 %}0{% endif %}{{ hours }}:{% if minutes < 10 %}0{% endif %}{{ minutes }}</td>
-      <td class="col-md-3">
-        {% assign lesson_number = lesson_number | plus: 1 %}
-	{{ lesson_number }}. <a href="{{ relative_root_path }}{{ episode.url }}">{{ episode.title }}</a>
-      </td>
-      <td class="col-md-7">
-        {% if episode.break %}
-          Break
-        {% else %}
-          {% if episode.questions %}
-            {% for question in episode.questions %}
-              {{question|markdownify|strip_html}}
-              {% unless forloop.last %}
-              <br/>
-              {% endunless %}
-            {% endfor %}
-          {% endif %}
-        {% endif %}
-      </td>
-    </tr>
-    {% assign current = current | plus: episode.teaching | plus: episode.exercises | plus: episode.break %}
-  {% assign hours = current | divided_by: 60 %}
-  {% assign minutes = current | modulo: 60 %}
-  {% break %}
-  {% endif %}
-  {% endfor %}
+    {% endfor %}
   {% endfor %}
   <tr>
     {% if multiday %}<td class="col-md-1"></td>{% endif %}
