@@ -1,0 +1,51 @@
+{% comment %}
+Get the appropriate URLs for the previous and next episodes,
+if they exist, based on whether the episode order is defined
+in site.contents or determined by numbered filename prefix.
+
+End result is two variables: prev_url and next_url.
+{% endcomment %}
+
+{% comment %}Find URL of previous episode{% endcomment %}
+{% if site.contents %}
+  {% assign prev = false %}
+  {% for epi in site.contents.episodes %}
+    {% if epi == page.slug %}
+      {% if prev %}
+        {% assign prev_epi = prev %}
+      {% endif %}
+      {% break %}
+    {% else %}
+      {% assign prev = epi %}
+    {% endif %}
+  {% endfor %}
+  {% for episode in site.episodes %}
+    {% if prev_epi == episode.slug %}
+      {% assign prev_url = episode.url %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% assign prev_url = page.previous.url %}
+{% endif %}
+
+{% comment %}Find URL of next episode{% endcomment %}
+{% if site.contents %}
+  {% assign next = false %}
+  {% for epi in site.contents.episodes %}
+    {% if next %}
+      {% assign next_epi = epi %}
+      {% break %}
+    {% elsif epi == page.slug %}
+      {% assign next = true %}
+    {% endif %}
+  {% endfor %}
+  {% for episode in site.episodes %}
+    {% if next_epi == episode.slug %}
+      {% assign next_url = episode.url %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% assign next_url = page.next.url %}
+{% endif %}
