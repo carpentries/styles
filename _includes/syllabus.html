@@ -30,7 +30,7 @@
   {% endif %}
   {% for epi in episodes %}
     {% if epi.slug %}
-      {% assign epislug = epi.slug %}{% comment %}Is there a way to achieve this by directly accessing the slugs when creating the episodes array above?{% endcomment %}}
+      {% assign epislug = epi.slug %}{% comment %}Is there a way to achieve this by directly accessing the slugs when creating the episodes array above?{% endcomment %}
     {% else %}
       {% assign epislug = epi %}
     {% endif %}
