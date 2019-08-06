@@ -6,7 +6,15 @@ in site.contents or determined by numbered filename prefix.
 End result is two variables: prev_url and next_url.
 {% endcomment %}
 
-{% comment %}Find URL of previous episode{% endcomment %}
+{% comment %}
+Find URL of previous episode.
+If the site.contents field is set in _config.yml, find the
+episode name that matches the permalink of the current page
+without the preceding '/' or trailing '.html'
+(this is stored in page.slug - see https://jekyllrb.com/docs/permalinks/ for more info)
+then use that information to determine the URL of the previous
+and next episode pages.
+{% endcomment %}
 {% if site.contents %}
   {% assign prev = false %}
   {% for epi in site.contents.episodes %}
