@@ -1484,8 +1484,8 @@ blockquote ul:last-child,
 blockquote ol:last-child {
   margin-bottom: 0;
 }
-blockquote * + p { 
-  padding-bottom: 1em; 
+blockquote :not(h2) + p {
+    padding-top: 1em;
 }
 blockquote footer,
 blockquote small,
