@@ -16,44 +16,44 @@ then use that information to determine the URL of the previous
 and next episode pages.
 {% endcomment %}
 {% if site.contents %}
-  {% assign prev = false %}
-  {% for epi in site.contents.episodes %}
-    {% if epi == page.slug %}
-      {% if prev %}
-        {% assign prev_epi = prev %}
+  {% assign previous = false %}
+  {% for episode in site.contents.episodes %}
+    {% if episode == page.slug %}
+      {% if previous %}
+        {% assign previous_episode = previous %}
       {% endif %}
       {% break %}
     {% else %}
-      {% assign prev = epi %}
+      {% assign previous = episode %}
     {% endif %}
   {% endfor %}
   {% for episode in site.episodes %}
-    {% if prev_epi == episode.slug %}
-      {% assign prev_url = episode.url %}
+    {% if previous_episode == episode.slug %}
+      {% assign previous_episode_url = episode.url %}
       {% break %}
     {% endif %}
   {% endfor %}
 {% else %}
-  {% assign prev_url = page.previous.url %}
+  {% assign previous_episode_url = page.previous.url %}
 {% endif %}
 
 {% comment %}Find URL of next episode{% endcomment %}
 {% if site.contents %}
   {% assign next = false %}
-  {% for epi in site.contents.episodes %}
+  {% for episode in site.contents.episodes %}
     {% if next %}
-      {% assign next_epi = epi %}
+      {% assign next_episode = episode %}
       {% break %}
-    {% elsif epi == page.slug %}
+    {% elsif episode == page.slug %}
       {% assign next = true %}
     {% endif %}
   {% endfor %}
   {% for episode in site.episodes %}
-    {% if next_epi == episode.slug %}
-      {% assign next_url = episode.url %}
+    {% if next_episode == episode.slug %}
+      {% assign next_episode_url = episode.url %}
       {% break %}
     {% endif %}
   {% endfor %}
 {% else %}
-  {% assign next_url = page.next.url %}
+  {% assign next_episode_url = page.next.url %}
 {% endif %}

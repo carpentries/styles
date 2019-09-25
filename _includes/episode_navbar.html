@@ -13,8 +13,8 @@ need to re-assign it here
 <div class="row">
   <div class="col-xs-1">
     <h3 class="text-left">
-      {% if prev_url %}
-      <a href="{{ relative_root_path }}{{ prev_url }}"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      {% if previous_episode_url %}
+      <a href="{{ relative_root_path }}{{ previous_episode_url }}"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
       {% else %}
       <a href="{{ relative_root_path }}/"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span><span class="sr-only">lesson home</span></a>
       {% endif %}
@@ -27,8 +27,8 @@ need to re-assign it here
   </div>
   <div class="col-xs-1">
     <h3 class="text-right">
-      {% if next_url %}
-      <a href="{{ relative_root_path }}{{ next_url }}"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      {% if next_episode_url %}
+      <a href="{{ relative_root_path }}{{ next_episode_url }}"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
       {% else %}
       <a href="{{ relative_root_path }}/"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span><span class="sr-only">lesson home</span></a>
       {% endif %}
