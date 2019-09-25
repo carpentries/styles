@@ -47,14 +47,12 @@
 	{% comment %} Show setup instructions. {% endcomment %}
         <li><a href="{{ relative_root_path }}{% link setup.md %}">Setup</a></li>
         {% comment %} Show lesson episodes for lessons. {% endcomment %}
-        {% assign episodes = site.episodes %}
-        {% include navbar_section.html collection=episodes title="Episodes" subsec=site.contents.episodes %}
+        {% include navbar_section.html collection=site.episodes title="Episodes" subsec=site.contents.episodes %}
 	{% endif %}
 
 	{% comment %} Show extras for lessons or if this is the main workshop-template repo (where they contain documentation). {% endcomment %}
 	{% if site.kind == "lesson" %}
-    {% assign extras = site.extras %}
-    {% include navbar_section.html collection=extras title="Extras" subsec=site.contents.extras %}
+    {% include navbar_section.html collection=site.extras title="Extras" subsec=site.contents.extras %}
 	{% endif %}
 
 	{% comment %} Always show license. {% endcomment %}
