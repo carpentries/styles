@@ -14,7 +14,7 @@ BOILERPLATE = (
     'CONTRIBUTING.md',
     'README.md',
     '_config.yml',
-    '_episodes/introduction.md',
+    '_episodes/01-introduction.md',
     '_extras/about.md',
     '_extras/discuss.md',
     '_extras/figures.md',
