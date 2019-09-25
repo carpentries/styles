@@ -64,19 +64,6 @@ instructor_post_survey: "https://www.surveymonkey.com/r/instructor_training_post
 # Start time in minutes (0 to be clock-independent, 540 to show a start at 09:00 am).
 start_time: 0
 
-# Specify order of episodes and extras.
-# Each list should contain the "slugified" titles of the pages
-# in each category (episodes & extras for a Carpentries lesson).
-# See https://jekyllrb.com/docs/permalinks/ for more info about slugs.
-contents:
-  episodes:
-    - introduction
-  extras:
-    - about
-    - guide
-    - figures
-    - discuss
-
 # Specify that things in the episodes collection should be output.
 collections:
   episodes:
