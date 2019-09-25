@@ -47,12 +47,61 @@
 	{% comment %} Show setup instructions. {% endcomment %}
         <li><a href="{{ relative_root_path }}{% link setup.md %}">Setup</a></li>
         {% comment %} Show lesson episodes for lessons. {% endcomment %}
-        {% include navbar_section.html collection=site.episodes title="Episodes" subsec=site.contents.episodes %}
+        <li class="dropdown">
+          <a href="{{ relative_root_path }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Episodes <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+          {% if site.contents %}
+            {% comment %}List entries according to order in _config.yml. Search to find this page (because Jekyll does not support lookup by key).{% endcomment %}
+            {% for ordered_episode_slug in site.contents.episodes %}
+              {% for episode in site.episodes %}
+                {% comment %}If there's a match, add a link to the dropdown menu.{% endcomment %}
+                {% if ordered_episode_slug == episode.slug %}
+                  <li><a href="{{ relative_root_path }}{{ episode.url }}">{{ episode.title }}</a></li>
+                {% break %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          {% endif %}
+          {% comment %}List episodes by numeric order if site.contents is not defined.{% endcomment %}
+          {% comment %}Then add "All-In-One" link.{% endcomment %}
+          {% unless site.contents %}
+            {% for episode in site.episodes %}
+              <li><a href="{{ relative_root_path }}{{ episode.url }}">{{ episode.title }}</a></li>
+            {% endfor %}
+          {% endunless %}
+            <li role="separator" class="divider"></li>
+            <li><a href="{{ relative_root_path }}{% link aio.md %}">All in one page (Beta)</a></li>
+          </ul>
+        </li>
 	{% endif %}
 
 	{% comment %} Show extras for lessons or if this is the main workshop-template repo (where they contain documentation). {% endcomment %}
 	{% if site.kind == "lesson" %}
-    {% include navbar_section.html collection=site.extras title="Extras" subsec=site.contents.extras %}
+    <li class="dropdown">
+      <a href="{{ relative_root_path }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extras<span class="caret"></span></a>
+      <ul class="dropdown-menu">
+        {% comment %}List extras by alphabetical order if site.contents is not defined.{% endcomment %}
+        {% comment %}But first add "Reference" link at the top.{% endcomment %}
+        <li><a href="{{ relative_root_path }}{% link reference.md %}">Reference</a></li>
+        {% unless site.contents %}
+          {% for extra in site.extras %}
+            <li><a href="{{ relative_root_path }}{{ extra.url }}">{{ extra.title }}</a></li>
+          {% endfor %}
+        {% endunless %}
+      {% if site.contents %}
+        {% comment %}List extras according to order in _config.yml.{% endcomment %}
+        {% for ordered_extra_slug in site.contents.extras %}
+          {% for extra in site.extras %}
+            {% comment %}If there's a match, add a link to the dropdown menu.{% endcomment %}
+            {% if ordered_extra_slug == extra.slug %}
+              <li><a href="{{ relative_root_path }}{{ extra.url }}">{{ extra.title }}</a></li>
+            {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+      </ul>
+    </li>
 	{% endif %}
 
 	{% comment %} Always show license. {% endcomment %}
