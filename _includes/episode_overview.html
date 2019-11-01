@@ -1,19 +1,45 @@
 {% comment %}
     Display an episode's timings and learning objectives.
 {% endcomment %}
+
+{% if page.teaching == null %}
+{% assign teaching_time = include.teaching_time %}
+{% else %}
+{% assign teaching_time = page.teaching %}
+{% endif %}
+
+{% if page.exercises == null %}
+{% assign exercise_time = include.exercise_time %}
+{% else %}
+{% assign exercise_time = page.exercises %}
+{% endif %}
+
+{% if page.questions == null %}
+{% assign episode_questions = include.episode_questions %}
+{% else %}
+{% assign episode_questions = page.questions %}
+{% endif %}
+
+{% if page.objectives == null %}
+{% assign episode_objectives = include.episode_objectives %}
+{% else %}
+{% assign episode_objectives = page.objectives %}
+{% endif %}
+
+
 <blockquote class="objectives">
   <h2>Overview</h2>
 
   <div class="row">
     <div class="col-md-3">
-      <strong>Teaching:</strong> {{ page.teaching }} min
+      <strong>Teaching:</strong> {{ teaching_time }} min
       <br/>
-      <strong>Exercises:</strong> {{ page.exercises }} min
+      <strong>Exercises:</strong> {{ exercise_time }} min
     </div>
     <div class="col-md-9">
       <strong>Questions</strong>
       <ul>
-	{% for question in page.questions %}
+	{% for question in episode_questions %}
 	<li>{{ question|markdownify }}</li>
 	{% endfor %}
       </ul>
@@ -26,7 +52,7 @@
     <div class="col-md-9">
       <strong>Objectives</strong>
       <ul>
-	{% for objective in page.objectives %}
+	{% for objective in episode_objectives %}
 	<li>{{ objective|markdownify }}</li>
 	{% endfor %}
       </ul>
