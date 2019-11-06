@@ -63,10 +63,10 @@ start_time: 0
 collections:
   episodes:
     output: true
-    permalink: /:path/index.html
+    permalink: /episodes/:path.html
   extras:
     output: true
-    permalink: /:path/index.html
+    permalink: /extras/:path.html
 
 # Set the default layout for things in the episodes collection.
 defaults:
