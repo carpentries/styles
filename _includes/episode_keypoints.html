@@ -2,7 +2,7 @@
   Display key points for an episode.
 {% endcomment %}
 
-{% if page.keypoints == null %}
+{% if page.keypoints == nil %}
 {% assign episode_keypoints = include.episode_keypoints %}
 {% else %}
 {% assign episode_keypoints = page.keypoints %}
