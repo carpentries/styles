@@ -11,6 +11,9 @@
     `include` statement when we generate the page:
 
 	{% include episode_overview.html teaching_time=e.teaching ... %}
+
+    Here we obtain the information we need either from the episode itself or
+    from the parameters passed in.
 {% endcomment %}
 
 {% if page.teaching == nil %}
