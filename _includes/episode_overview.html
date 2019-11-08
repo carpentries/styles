@@ -1,5 +1,16 @@
 {% comment %}
-    Display an episode's timings and learning objectives.
+    Display episode's timings and learning objectives.
+
+    Regarding the `if page.*** == nil` below:
+    all-in-one page combines all episodes into one.
+    It, therefore, does not define its own objectives, exercises,
+    and questions, which 'normal' episodes define in the front matter.
+
+    To display episodes' teaching and exercise times, as well as episode
+    questions and objectives, we pass them as parameters to the Liquid's
+    `include` statement when we generate the page:
+
+	{% include episode_overview.html teaching_time=e.teaching ... %}
 {% endcomment %}
 
 {% if page.teaching == nil %}
