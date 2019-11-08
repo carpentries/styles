@@ -2,25 +2,25 @@
     Display an episode's timings and learning objectives.
 {% endcomment %}
 
-{% if page.teaching == null %}
+{% if page.teaching == nil %}
 {% assign teaching_time = include.teaching_time %}
 {% else %}
 {% assign teaching_time = page.teaching %}
 {% endif %}
 
-{% if page.exercises == null %}
+{% if page.exercises == nil %}
 {% assign exercise_time = include.exercise_time %}
 {% else %}
 {% assign exercise_time = page.exercises %}
 {% endif %}
 
-{% if page.questions == null %}
+{% if page.questions == nil %}
 {% assign episode_questions = include.episode_questions %}
 {% else %}
 {% assign episode_questions = page.questions %}
 {% endif %}
 
-{% if page.objectives == null %}
+{% if page.objectives == nil %}
 {% assign episode_objectives = include.episode_objectives %}
 {% else %}
 {% assign episode_objectives = page.objectives %}
