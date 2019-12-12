@@ -7,7 +7,10 @@
 # Default target
 .DEFAULT_GOAL := commands
 
+# Markdown parser
 PARSER ?= bin/markdown_ast.rb
+
+# Destination directory
 DST = _site
 
 HOST ?= 127.0.0.1
@@ -18,15 +21,49 @@ GEM_CMD ?= $(shell which gem)
 JEKYLL ?= $(shell which jekyll)
 BUNDLE ?= $(shell which bundle)
 DOCKER ?= $(shell which docker)
-PYTHON ?= $(shell which python3)
 RSCRIPT ?= $(shell which Rscript)
+
+# Check if Python 3 is installed and determine if it's called via python3 or python
+# (https://stackoverflow.com/a/4933395)
+ifeq (,$(PYTHON))
+  PYTHON_EXE := $(shell which python3 2>/dev/null)
+  ifneq (,$(PYTHON_EXE))
+    ifeq (,$(findstring Microsoft/WindowsApps/python3,$(subst \,/,$(PYTHON_EXE))))
+      PYTHON_VERSION := $(word 1,$(wordlist 2,4,$(subst ., ,$(shell $(PYTHON_EXE) --version 2>&1))))
+      ifeq (3,$(PYTHON_VERSION))
+        PYTHON := python3
+      endif
+    else
+      $(info "Your `python3` is a link to Microsoft Store.")
+    endif
+  endif
+
+  ifeq (,$(PYTHON))
+    PYTHON_EXE := $(shell which python 2>/dev/null)
+    ifneq (, $(PYTHON_EXE))
+      PYTHON_VERSION := $(word 1,$(wordlist 2,4,$(subst ., ,$(shell $(PYTHON_EXE) --version 2>&1))))
+      ifeq (3,$(call python_version,$(PYTHON_EXE)))
+        PYTHON := python
+      else
+        $(error "Your system does not appear to have Python 3 installed.")
+      endif
+    else
+        $(error "Your system does not appear to have any Python installed.")
+    endif
+  endif
+else
+  PYTHON_VERSION := $(word 1,$(wordlist 2,4,$(subst ., ,$(shell $(PYTHON) --version 2>&1))))
+  ifneq (3,$(PYTHON_VERSION))
+    $(error "Python 3 is required. Your Python version: $(PYTHON_VERSION)")
+  endif
+endif
 
 # Jekyll version on GitHub
 ifneq (, $(wildcard ./Gemfile.lock))
   GITHUB_JEKYLL_VERSION := $(shell sed -n '/jekyll\ (=.*)/s|.*(= \(.*\))|\1|p' Gemfile.lock)
 else
   # Sync with https://pages.github.com/versions/
-  GITHUB_JEKYLL_VERSION = 3.7.4
+  GITHUB_JEKYLL_VERSION = 3.8.5
 endif
 
 ifneq (, $(JEKYLL))
