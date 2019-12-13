@@ -42,7 +42,7 @@ endif
 serve : lesson-md
 	${JEKYLL} serve
 
-## * site             : build files but do not run a server
+## * site             : build website but do not run a server
 site : lesson-md
 	${JEKYLL} build
 
