@@ -1,3 +1,9 @@
+# Use /bin/bash instead of /bin/sh
+export SHELL = /bin/bash
+
+## ========================================
+## Commands for both workshop and lesson websites.
+
 # Settings
 MAKEFILES=Makefile $(wildcard *.mk)
 JEKYLL_VERSION=3.8.5
@@ -56,7 +62,7 @@ docker-serve :
 
 ## * repo-check       : check repository settings
 repo-check :
-	@bin/repo_check.py -s .
+	@${PYTHON} bin/repo_check.py -s .
 
 ## * clean            : clean up junk files
 clean :
@@ -150,10 +156,3 @@ lesson-fixme :
 ## * commands         : show all commands.
 commands :
 	@sed -n -e '/^##/s|^##[[:space:]]*||p' $(MAKEFILE_LIST)
-
-
-#-------------------------------------------------------------------------------
-# Include extra commands if available.
-#-------------------------------------------------------------------------------
-
--include commands.mk
