@@ -4,16 +4,6 @@ export SHELL = /bin/bash
 # Required variables and targets
 include required.mk
 
-# Lesson-specific variables and targets (if any)
-skip_include = required.mk
-EXTRA_MAKEFILES := $(sort $(filter-out $(skip_include), $(wildcard *.mk)))
-
-ifneq (,$(EXTRA_MAKEFILES))
-  $(info Including $(EXTRA_MAKEFILES))
-  include $(EXTRA_MAKEFILES)
-endif
-
-
 ## I. Commands for both workshop and lesson websites.
 ## =================================================
 
@@ -36,9 +26,9 @@ endif
 ## * docker-serve     : use docker to serve the site.
 docker-serve :
 ifneq (, $(DOCKER))
-	docker run --rm -it --volume ${PWD}:/srv/jekyll \
+	$(DOCKER) run --rm -it --volume ${PWD}:/srv/jekyll \
            --volume=${PWD}/.docker-vendor/bundle:/usr/local/bundle \
-           -p 127.0.0.1:4000:4000 \
+           -p 127.0.0.1:4000:$(PORT) \
            jekyll/jekyll:${JEKYLL_VERSION} \
            bin/run-make-docker-serve.sh
 else
@@ -48,7 +38,7 @@ endif
 ## * repo-check       : check repository settings.
 repo-check :
 ifneq (, $(PYTHON))
-	@bin/repo_check.py -s .
+	@${PYTHON} bin/repo_check.py -s .
 else
 $(error Python3 not found!)
 endif
