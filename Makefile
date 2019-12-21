@@ -1,73 +1,51 @@
 # Use /bin/bash instead of /bin/sh
 export SHELL = /bin/bash
 
-## ========================================
-## Commands for both workshop and lesson websites.
+# #################################################
+#              ** Customizations **
 
-# Settings
-MAKEFILES=Makefile $(wildcard *.mk)
-JEKYLL_VERSION=3.8.5
-JEKYLL=bundle install --path .vendor/bundle && bundle update && bundle exec jekyll
-PARSER=bin/markdown_ast.rb
-DST=_site
+# Markdown parser (requires 'kramdown' & 'json')
+PARSER ?= bin/markdown_ast.rb
 
-# Check Python 3 is installed and determine if it's called via python3 or python
-# (https://stackoverflow.com/a/4933395)
-PYTHON3_EXE := $(shell which python3 2>/dev/null)
-ifneq (, $(PYTHON3_EXE))
-  ifeq (,$(findstring Microsoft/WindowsApps/python3,$(subst \,/,$(PYTHON3_EXE))))
-    PYTHON := python3
-  endif
-endif
+# Local directory where
+DST ?= _site
 
-ifeq (,$(PYTHON))
-  PYTHON_EXE := $(shell which python 2>/dev/null)
-  ifneq (, $(PYTHON_EXE))
-    PYTHON_VERSION_FULL := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
-    PYTHON_VERSION_MAJOR := $(word 1,${PYTHON_VERSION_FULL})
-    ifneq (3, ${PYTHON_VERSION_MAJOR})
-      $(error "Your system does not appear to have Python 3 installed.")
-    endif
-    PYTHON := python
-  else
-      $(error "Your system does not appear to have any Python installed.")
-  endif
-endif
+# Address and port of a locally rendered website
+# Used by `jekyll` or Docker
+HOST ?= 127.0.0.1
+PORT ?= 4000
+# ##################################################
 
-
-# Controls
-.PHONY : commands clean files
+# Variables & commands
+-include tools.mk
+-include commands.mk
 
 # Default target
 .DEFAULT_GOAL := commands
 
 ## I. Commands for both workshop and lesson websites
 ## =================================================
+.PHONY: serve site docker-serve repo-check clean clean-rmd
 
 ## * serve            : render website and run a local server
 serve : lesson-md
-	${JEKYLL} serve
+	@$(JEKYLL_SERVE_CMD)
 
 ## * site             : build website but do not run a server
 site : lesson-md
-	${JEKYLL} build
+	@$(JEKYLL_BUILD_CMD)
 
 ## * docker-serve     : use Docker to serve the site
 docker-serve :
-	docker run --rm -it --volume ${PWD}:/srv/jekyll \
-           --volume=${PWD}/.docker-vendor/bundle:/usr/local/bundle \
-           -p 127.0.0.1:4000:4000 \
-           jekyll/jekyll:${JEKYLL_VERSION} \
-           bin/run-make-docker-serve.sh
+	@$(DOCKER_SERVE_CMD)
 
 ## * repo-check       : check repository settings
 repo-check :
-	@${PYTHON} bin/repo_check.py -s .
+	@$(REPO_CHECK_CMD)
 
 ## * clean            : clean up junk files
 clean :
-	@rm -rf ${DST}
-	@rm -rf .sass-cache
+	@$(JEKYLL_CLEAN_CMD)
 	@rm -rf bin/__pycache__
 	@find . -name .DS_Store -exec rm {} \;
 	@find . -name '*~' -exec rm {} \;
@@ -82,43 +60,18 @@ clean-rmd :
 ##
 ## II. Commands specific to workshop websites
 ## =================================================
-
-.PHONY : workshop-check
+.PHONY: workshop-check
 
 ## * workshop-check   : check workshop homepage
 workshop-check :
-	@${PYTHON} bin/workshop_check.py .
+	@$(WORKSHOP_CHECK_CMD)
 
 
 ##
 ## III. Commands specific to lesson websites
 ## =================================================
-
-.PHONY : lesson-check lesson-md lesson-files lesson-fixme
-
-# RMarkdown files
-RMD_SRC = $(wildcard _episodes_rmd/??-*.Rmd)
-RMD_DST = $(patsubst _episodes_rmd/%.Rmd,_episodes/%.md,$(RMD_SRC))
-
-# Lesson source files in the order they appear in the navigation menu.
-MARKDOWN_SRC = \
-  index.md \
-  CODE_OF_CONDUCT.md \
-  setup.md \
-  $(sort $(wildcard _episodes/*.md)) \
-  reference.md \
-  $(sort $(wildcard _extras/*.md)) \
-  LICENSE.md
-
-# Generated lesson files in the order they appear in the navigation menu.
-HTML_DST = \
-  ${DST}/index.html \
-  ${DST}/conduct/index.html \
-  ${DST}/setup/index.html \
-  $(patsubst _episodes/%.md,${DST}/%/index.html,$(sort $(wildcard _episodes/*.md))) \
-  ${DST}/reference/index.html \
-  $(patsubst _extras/%.md,${DST}/%/index.html,$(sort $(wildcard _extras/*.md))) \
-  ${DST}/license/index.html
+.PHONY: lesson-md lesson-check lesson-check-all \
+	    unittest lesson-files lesson-fixme
 
 ## * lesson-md        : convert Rmarkdown files to markdown
 lesson-md : ${RMD_DST}
@@ -128,15 +81,15 @@ _episodes/%.md: _episodes_rmd/%.Rmd
 
 # * lesson-check     : validate lesson Markdown
 lesson-check : lesson-fixme
-	@${PYTHON} bin/lesson_check.py -s . -p ${PARSER} -r _includes/links.md
+	@$(LESSON_CHECK_CMD)
 
 ## * lesson-check-all : validate lesson Markdown, checking line lengths and trailing whitespace
 lesson-check-all :
-	@${PYTHON} bin/lesson_check.py -s . -p ${PARSER} -r _includes/links.md -l -w --permissive
+	@$(LESSON_CHECK_ALL_CMD)
 
 ## * unittest         : run unit tests on checking tools
 unittest :
-	@${PYTHON} bin/test_lesson_check.py
+	@$(UNITTEST_CMD)
 
 ## * lesson-files     : show expected names of generated files for debugging
 lesson-files :
@@ -152,7 +105,26 @@ lesson-fixme :
 ##
 ## IV. Auxililary (plumbing) commands
 ## =================================================
+.PHONY: commands bundle lock
 
 ## * commands         : show all commands.
 commands :
 	@sed -n -e '/^##/s|^##[[:space:]]*||p' $(MAKEFILE_LIST)
+
+## * bundle           : create or update .vendor/bundle.
+bundle : .vendor/bundle
+
+.vendor/bundle : Gemfile
+	@$(BUNDLE_INSTALL_CMD)
+
+## * lock             : create or update Gemfile.lock from the current Gemfile
+lock : Gemfile.lock
+
+Gemfile.lock : Gemfile
+	@$(BUNDLE_LOCK_CMD)
+
+Gemfile :
+ifeq (, $(wildcard ./Gemfile))
+	$(error Gemfile not found)
+endif
+
