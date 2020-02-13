@@ -4,18 +4,37 @@ DOCKER ?= $(shell which docker 2>/dev/null)
 RSCRIPT ?= $(shell which Rscript 2>/dev/null)
 JEKYLL ?= $(shell which jekyll 2>/dev/null)
 BUNDLE ?= $(shell which bundle 2>/dev/null)
+CURL ?= $(shell which curl 2>/dev/null)
+SED ?= $(shell which sed 2>/dev/null)
 
 
 # Determine Jekyll version that we need
-ifneq (, $(JEKYLL_VERSION))
-  # Get Jekyll version from the Gemfile.lock
-  ifneq (, $(wildcard ./Gemfile.lock))
-    JEKYLL_VERSION := $(shell sed -n "/jekyll\ (=.*)/s|.*(= \(.*\))|\1|p" Gemfile.lock)
-  endif
+ifeq (,$(JEKYLL_VERSION))
+  ifneq (, $(SED))
+    # Obtain required version from https://pages.github.com/versions
+    ifneq (, $(CURL))
+        JEKYLL_VERSION_GITHUB := $(shell curl -s https://pages.github.com/versions.json | sed -n "s|.*\"jekyll\":\"\([^\"]*\)\".*|\1|p")
+    endif
 
-  ifeq (, $(JEKYLL_VERSION))
-    # Sync with https://pages.github.com/versions
-    JEKYLL_VERSION := 3.8.5
+    # Get Jekyll version from the Gemfile.lock
+    ifneq (, $(wildcard ./Gemfile.lock))
+      JEKYLL_VERSION_LOCK := $(shell sed -n "/jekyll\ (=.*)/s|.*(= \(.*\))|\1|p" Gemfile.lock)
+
+      # Compare two verions of Jekyll, if both are available
+      ifneq (, $(JEKYLL_VERSION_GITHUB))
+        ifneq ($(JEKYLL_VERSION_LOCK),$(JEKYLL_VERSION_GITHUB))
+          ifneq ($(MAKECMDGOALS),lock)
+            $(warning )
+            $(warning GitHub requires Jekyll $(JEKYLL_VERSION_GITHUB))
+            $(warning Gemfile.lock specifies Jekyll $(JEKYLL_VERSION_LOCK))
+            $(warning Please update Gemfile.lock by running 'make -B lock')
+            $(warning )
+          endif
+        endif
+      endif
+    endif
+  else
+    $(warning Your system does not have Sed installed.)
   endif
 endif
 
