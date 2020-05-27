@@ -54,11 +54,13 @@ site : lesson-md
 
 ## * docker-serve     : use Docker to serve the site
 docker-serve :
-	docker run --rm -it --volume ${PWD}:/srv/jekyll \
-           --volume=${PWD}/.docker-vendor/bundle:/usr/local/bundle \
-           -p 127.0.0.1:4000:4000 \
-           jekyll/jekyll:${JEKYLL_VERSION} \
-           bin/run-make-docker-serve.sh
+	docker run --rm -it \
+		-v ${PWD}:/home/rstudio \
+		-p 4000:4000 \
+		-p 8787:8787 \
+		-e USERID=$(id -u) \
+		-e GROUPID=$(id -g) \
+		carpentries/lesson-docker:latest
 
 ## * repo-check       : check repository settings
 repo-check :
