@@ -54,12 +54,13 @@ site : lesson-md
 
 ## * docker-serve     : use Docker to serve the site
 docker-serve :
+	docker pull carpentries/lesson-docker:latest
 	docker run --rm -it \
-		-v ${PWD}:/home/rstudio \
+		-v $${PWD}:/home/rstudio \
 		-p 4000:4000 \
 		-p 8787:8787 \
-		-e USERID=$(id -u) \
-		-e GROUPID=$(id -g) \
+		-e USERID=$$(id -u) \
+		-e GROUPID=$$(id -g) \
 		carpentries/lesson-docker:latest
 
 ## * repo-check       : check repository settings
