@@ -4,11 +4,18 @@ generate_md_episodes <- function() {
     install.packages("renv", repos = c(CRAN = "https://cloud.r-project.org/"))
   }
 
+  if (!requireNamespace("rprojroot", quietly = TRUE)) {
+    install.packages("rprojroot", repos = c(CRAN = "https://cloud.r-project.org/"))
+  }
+
+  cfg  <- rprojroot::has_file_pattern("^_config.y*ml$")
+  root <- rprojroot::find_root(cfg)
+
   required_pkgs <- unique(c(
     ## Packages for episodes
-    renv::dependencies("_episodes_rmd", error = "ignore")$Packages,
+    renv::dependencies(file.path(root, "_episodes_rmd"), progress = FALSE, error = "ignore")$Package,
     ## Pacakges for tools
-    renv::dependencies("bin", error = "ignore")$Packages
+    renv::dependencies(file.path(root, "bin"), progress = FALSE, error = "ignore")$Package
   ))
 
   missing_pkgs <- setdiff(required_pkgs, rownames(installed.packages()))
