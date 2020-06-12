@@ -1,5 +1,5 @@
 <details>
-<summary>Instructions</summary>
+<summary><strong>Instructions</strong></summary>
 
 Thanks for contributing! :heart:
 
