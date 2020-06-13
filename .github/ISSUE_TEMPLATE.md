@@ -3,7 +3,7 @@
 
 Thanks for contributing! :heart:
 
-If this contribution is for instructor training, please email link to this contribution to
+If this contribution is for instructor training, please email the link to this contribution to
 checkout@carpentries.org so we can record your progress. You've completed your contribution
 step for instructor checkout by submitting this contribution!
 
