@@ -1,5 +1,9 @@
 # Use /bin/bash instead of /bin/sh
-export SHELL = /bin/bash
+ifneq (,$(wildcard /bin/bash))
+  export SHELL = /bin/bash
+else ifneq (,$(wildcard /usr/bin/bash))
+  export SHELL = /usr/bin/bash
+endif
 
 ## ========================================
 ## Commands for both workshop and lesson websites.
