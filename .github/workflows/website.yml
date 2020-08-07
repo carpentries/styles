@@ -1,0 +1,55 @@
+name: Website
+on:
+  push:
+    branches: gh-pages
+  pull_request: []
+jobs:
+  build-website:
+    name: Build lesson website
+    if: github.repository != 'carpentries/styles'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Set up Ruby
+        uses: actions/setup-ruby@main
+        with:
+          ruby-version: '2.7.1'
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install GitHub Pages, Bundler, and kramdown gems
+        run: |
+          gem install github-pages bundler kramdown
+
+      - name: Install Python modules
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests
+
+      - name: Checkout the lesson
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Look for R-markdown files
+        id: check-rmd
+        run: |
+          echo "::set-output name=count::$(shopt -s nullglob; files=($(find . -iname '*.Rmd')); echo ${#files[@]})"
+
+      - name: Install R packages
+        if: steps.check-rmd.outputs.count != 0
+        run: |
+          mkdir -p ~/local/R_libs
+          echo 'R_LIBS_USER=~/local/R_libs/' > ~/.Renviron
+          Rscript -e "install.packages(c('knitr', 'stringr', 'checkpoint', 'ggplot2'), repos = 'https://cran.rstudio.com', dependencies = TRUE, lib='~/local/R_libs/')"
+
+      - run: make site
+      - run: make lesson-check
+        if: always()
+      - run: make lesson-check-all
+        if: always()
