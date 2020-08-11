@@ -52,12 +52,25 @@ jobs:
         run: |
           echo "::set-output name=count::$(shopt -s nullglob; files=($(find . -iname '*.Rmd')); echo ${#files[@]})"
 
+      - name: Set up R
+        if: steps.check-rmd.outputs.count != 0
+        uses: r-lib/actions/setup-r@master
+        with:
+          r-version: 'release'
+
       - name: Install R packages
         if: steps.check-rmd.outputs.count != 0
         run: |
-          mkdir -p ~/local/R_libs
-          echo 'R_LIBS_USER=~/local/R_libs/' > ~/.Renviron
-          Rscript -e "install.packages(c('knitr', 'stringr', 'checkpoint', 'ggplot2'), repos = 'https://cran.rstudio.com', dependencies = TRUE, lib='~/local/R_libs/')"
+          install.packages('remotes', 'rprojroot', 'renv')
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        if: runner.os != 'Windows' && steps.check-rmd.outputs.count != 0
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Determine the proper reference to use
         id: styles-ref
