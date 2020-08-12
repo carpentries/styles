@@ -58,10 +58,20 @@ jobs:
         with:
           r-version: 'release'
 
-      - name: Install R packages
+      - name: Install neeeded packages
         if: steps.check-rmd.outputs.count != 0
         run: |
-          install.packages('remotes', 'rprojroot', 'renv')
+          install.packages(c('remotes', 'rprojroot', 'renv', 'desc'))
+        shell: Rscript {0}
+
+      - name: Query dependencies
+        if: steps.check-rmd.outputs.count != 0
+        working-directory: lesson
+        run: |
+          source('bin/dependencies.R')
+          deps <- identify_dependencies()
+          create_description(deps)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
       - name: Cache R packages
@@ -71,6 +81,23 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux' && steps.check-rmd.outputs.count != 0
+        working-directory: lesson
+        run: |
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
+
+      - name: Install lesson package dependencies
+        if: steps.check-rmd.outputs.count != 0
+        working-directory: lesson
+        run: |
+          remotes::install_deps(dependencies = TRUE)
+          file.remove("DESCRIPTION")
+        shell: Rscript {0}
 
       - name: Determine the proper reference to use
         id: styles-ref
