@@ -32,7 +32,7 @@ endif
 
 
 # Controls
-.PHONY : commands clean files
+.PHONY : commands clean files install-rmd-deps
 
 # Default target
 .DEFAULT_GOAL := commands
