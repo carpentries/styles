@@ -58,7 +58,7 @@ jobs:
         with:
           r-version: 'release'
 
-      - name: Install neeeded packages
+      - name: Install needed packages
         if: steps.check-rmd.outputs.count != 0
         run: |
           install.packages(c('remotes', 'rprojroot', 'renv', 'desc'))
