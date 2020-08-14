@@ -2,7 +2,7 @@ name: Template
 on:
   push:
     branches: gh-pages
-  pull_request: []
+  pull_request:
 jobs:
   check-template:
     name: Test lesson template
