@@ -46,6 +46,17 @@ jobs:
           path: lesson
           fetch-depth: 0
 
+      - name: Sync lesson with carpentries/styles
+        working-directory: lesson
+        run: |
+          git config --global user.email "team@carpentries.org"
+          git config --global user.name "The Carpentries Bot"
+          git remote add styles https://github.com/carpentries/styles.git
+          git config --local remote.styles.tagOpt --no-tags
+          git fetch styles ${{ steps.styles-ref.outputs.ref }}:styles-ref
+          git merge -s recursive -Xtheirs --no-commit styles-ref
+          git commit -m "Sync lesson with carpentries/styles"
+
       - name: Look for R-markdown files
         id: check-rmd
         working-directory: lesson
@@ -108,17 +119,6 @@ jobs:
           else
             echo "::set-output name=ref::gh-pages"
           fi
-
-      - name: Sync lesson with carpentries/styles
-        working-directory: lesson
-        run: |
-          git config --global user.email "team@carpentries.org"
-          git config --global user.name "The Carpentries Bot"
-          git remote add styles https://github.com/carpentries/styles.git
-          git config --local remote.styles.tagOpt --no-tags
-          git fetch styles ${{ steps.styles-ref.outputs.ref }}:styles-ref
-          git merge -s recursive -Xtheirs --no-commit styles-ref
-          git commit -m "Sync lesson with carpentries/styles"
 
       - run: make site
         working-directory: lesson
