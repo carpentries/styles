@@ -89,7 +89,7 @@ jobs:
           while read -r cmd
           do
             eval $cmd
-          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
+          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "18.04"), sep = "\n")')
 
       - name: Install lesson package dependencies
         if: steps.check-rmd.outputs.count != 0
