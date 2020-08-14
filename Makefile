@@ -127,7 +127,7 @@ install-rmd-deps:
 lesson-md : ${RMD_DST}
 
 _episodes/%.md: _episodes_rmd/%.Rmd install-rmd-dependencies
-	mkdir -p _episodes
+	@mkdir -p _episodes
 	@bin/knit_lessons.sh $< $@
 
 ## * lesson-check     : validate lesson Markdown
