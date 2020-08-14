@@ -88,7 +88,7 @@ jobs:
         run: |
           while read -r cmd
           do
-            eval sudo $cmd
+            eval $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
 
       - name: Install lesson package dependencies
