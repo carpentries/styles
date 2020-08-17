@@ -46,6 +46,15 @@ jobs:
           path: lesson
           fetch-depth: 0
 
+      - name: Determine the proper reference to use
+        id: styles-ref
+        run: |
+          if [[ -n "${{ github.event.pull_request.number }}" ]]; then
+            echo "::set-output name=ref::refs/pull/${{ github.event.pull_request.number }}/head"
+          else
+            echo "::set-output name=ref::gh-pages"
+          fi
+
       - name: Sync lesson with carpentries/styles
         working-directory: lesson
         run: |
@@ -110,15 +119,6 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           file.remove("DESCRIPTION")
         shell: Rscript {0}
-
-      - name: Determine the proper reference to use
-        id: styles-ref
-        run: |
-          if [[ -n "${{ github.event.pull_request.number }}" ]]; then
-            echo "::set-output name=ref::refs/pull/${{ github.event.pull_request.number }}/head"
-          else
-            echo "::set-output name=ref::gh-pages"
-          fi
 
       - run: make site
         working-directory: lesson
