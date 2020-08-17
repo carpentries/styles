@@ -3,12 +3,13 @@
 
 # Settings
 MAKEFILES=Makefile $(wildcard *.mk)
-JEKYLL=bundle config set --local path .vendor/bundle && bundle install && bundle update && bundle exec jekyll
 PARSER=bin/markdown_ast.rb
 DST=_site
 
 # Find Docker
 DOCKER := $(shell which docker 2>/dev/null)
+
+BUNDLE := $(shell which bundle 2>/dev/null)
 
 # Check Python 3 is installed and determine if it's called via python3 or python
 # (https://stackoverflow.com/a/4933395)
@@ -41,15 +42,19 @@ endif
 ## I. Commands for both workshop and lesson websites
 ## =================================================
 
-.PHONY: site docker-serve repo-check clean clean-rmd
+.PHONY: site site-offline docker-serve repo-check clean clean-rmd
 
 ## * serve            : render website and run a local server
-serve : lesson-md index.md
-	${JEKYLL} serve
+serve : lesson-md index.md bundler .vendor/bundle
+	@bundle exec jekyll serve
 
 ## * site             : build website but do not run a server
-site : lesson-md index.md
-	${JEKYLL} build
+site : update-bundle site-offline
+	@:
+
+## * site-offline     : same as 'site' but doesn't update Ruby gems
+site-offline : lesson-md index.md bundler .vendor/bundle
+	@bundle exec jekyll build
 
 ## * docker-serve     : use Docker to serve the site
 docker-serve :
@@ -135,6 +140,7 @@ install-rmd-deps:
 
 ## * lesson-md        : convert Rmarkdown files to markdown
 lesson-md : ${RMD_DST}
+	@:
 
 _episodes/%.md: _episodes_rmd/%.Rmd install-rmd-deps
 	@mkdir -p _episodes
@@ -167,9 +173,9 @@ lesson-fixme :
 ## IV. Auxililary (plumbing) commands
 ## =================================================
 
-.PHONY : commands python
+.PHONY : commands python bundler bundle update-bundle
 
-## * commands         : show all commands.
+## * commands         : show all commands
 commands :
 	@sed -n -e '/^##/s|^##[[:space:]]*||p' $(MAKEFILE_LIST)
 
@@ -179,6 +185,40 @@ ifeq (, $(PYTHON))
 else
 	@:
 endif
+
+bundler :
+ifeq (, $(BUNDLE))
+	$(error Please install Bundler using 'gem install bundler')
+else
+	@:
+endif
+
+## * bundle           : install Ruby gems (required for building lesson website locally)
+bundle : .vendor/bundle
+	@:
+
+.vendor/bundle: Gemfile.lock bundler
+	$(info Installing Ruby gems)
+	@bundle config set --local path '.vendor/bundle'
+	@bundle install
+	@touch .vendor/bundle
+
+## * update-bundle    : update Ruby gems (required for building lesson website locally)
+update-bundle : Gemfile.lock bundler
+	$(info Updating Ruby gems)
+	@bundle config set --local path '.vendor/bundle'
+	@bundle update --quiet
+	@touch .vendor/bundle
+
+Gemfile:
+ifeq (, $(wildcard Gemfile))
+	$(error Gemfile not found!)
+else
+	@:
+endif
+
+Gemfile.lock: Gemfile bundler
+	@bundle lock --update
 
 index.md :
 ifeq (, $(wildcard index.md))
