@@ -35,7 +35,7 @@ install_dependencies <- function(required_pkgs,
                                  lib = NULL, repos = getOption("repos"),
                                  update = FALSE, ...) {
 
-  if (missing(lib))  {
+  if (is.null(lib))  {
     lib <- .libPaths()
   }
 
