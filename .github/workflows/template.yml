@@ -16,6 +16,8 @@ jobs:
     defaults:
       run:
         shell: bash # forces 'Git for Windows' on Windows
+    env:
+      RSPM: 'https://packagemanager.rstudio.com/cran/__linux__/bionic/latest'
     steps:
       - name: Set up Ruby
         uses: actions/setup-ruby@main
