@@ -124,9 +124,9 @@ install-rmd-deps:
 	Rscript -e 'source("bin/dependencies.R"); install_dependencies(identify_dependencies())'
 
 ## * lesson-md        : convert Rmarkdown files to markdown
-lesson-md : ${RMD_DST}
+lesson-md : install-rmd-dependencies ${RMD_DST}
 
-_episodes/%.md: _episodes_rmd/%.Rmd install-rmd-dependencies
+_episodes/%.md: _episodes_rmd/%.Rmd
 	@mkdir -p _episodes
 	@bin/knit_lessons.sh $< $@
 
