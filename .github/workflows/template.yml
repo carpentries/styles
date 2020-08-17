@@ -109,7 +109,7 @@ jobs:
         run: |
           while read -r cmd
           do
-            eval $cmd
+            eval sudo $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "18.04"), sep = "\n")')
 
       - name: Install R lessons package dependencies
