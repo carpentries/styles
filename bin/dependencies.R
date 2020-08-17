@@ -31,28 +31,12 @@ identify_dependencies <- function(lib = NULL, repos = getOption("repos")) {
   required_pkgs
 }
 
-install_dependencies <- function(required_pkgs,
-                                 lib = NULL, repos = getOption("repos"),
-                                 update = FALSE, ...) {
+install_dependencies <- function(required_pkgs, ...) {
 
-  if (is.null(lib))  {
-    lib <- .libPaths()
-  }
 
-  missing_pkgs <- setdiff(required_pkgs, rownames(installed.packages()))
-
-  if (length(missing_pkgs)) {
-    message("Installing missing required packages: ",
-      paste(missing_pkgs, collapse=", "))
-    install.packages(missing_pkgs, lib = lib, repos = repos)
-  }
-
-  if (update) {
-    update.packages(
-      lib.loc = lib, repos = repos,
-      ask = FALSE, checkBuilt = TRUE, ...
-    )
-  }
+  create_description(required_pkgs)
+  on.exit(file.remove("DESCRIPTION"))
+  remotes::install_deps(dependencies = TRUE)
 
   if (require("knitr") && packageVersion("knitr") < '1.9.19') {
     stop("knitr must be version 1.9.20 or higher")
