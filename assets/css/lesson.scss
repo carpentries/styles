@@ -43,23 +43,23 @@ $color-testimonial: #fc8dc1 !default;
 .output  { @include cdSetup($color-output); }
 .source  { @include cdSetup($color-source); }
 
-.bash, .language-bash     { @include cdSetup($color-source); }
-.make, .language-make     { @include cdSetup($color-source); }
-.matlab, .language-matlab { @include cdSetup($color-source); }
-.python, .language-python { @include cdSetup($color-source); }
-.r, .language-r           { @include cdSetup($color-source); }
-.sql, .language-sql       { @include cdSetup($color-source); }
+.bash, div.language-bash     { @include cdSetup($color-source); }
+.make, div.language-make     { @include cdSetup($color-source); }
+.matlab, div.language-matlab { @include cdSetup($color-source); }
+.python, div.language-python { @include cdSetup($color-source); }
+.r, div.language-r           { @include cdSetup($color-source); }
+.sql, div.language-sql       { @include cdSetup($color-source); }
 
 .error::before,
 .warning:before,
 .output::before,
 .source::before,
-.bash::before, .language-bash::before,
-.make::before, .language-make::before,
-.matlab::before, .language-matlab::before,
-.python::before, .language-python::before,
-.r::before, .language-r::before,
-.sql::before, .language-sql::before {
+.bash::before, div.language-bash::before,
+.make::before, div.language-make::before,
+.matlab::before, div.language-matlab::before,
+.python::before, div.language-python::before,
+.r::before, div.language-r::before,
+.sql::before, div.language-sql::before {
     background-color: #f2eff6;
     display: block;
     font-weight: bold;
@@ -70,12 +70,12 @@ $color-testimonial: #fc8dc1 !default;
 .warning:before { background-color: #f8f4e8; content:" Warning"; }
 .output::before { background-color: #efefef; content: "Output"; }
 .source::before { content: "Code"; }
-.bash::before, .language-bash::before { content: "Bash"; }
-.make::before, .language-make::before { content: "Make"; }
-.matlab::before, .language-matlab::before { content: "Matlab"; }
-.python::before, .language-python::before { content: "Python"; }
-.r::before, .language-r::before { content: "R"; }
-.sql::before, .language-sql::before { content: "SQL"; }
+.bash::before, div.language-bash::before { content: "Bash"; }
+.make::before, div.language-make::before { content: "Make"; }
+.matlab::before, div.language-matlab::before { content: "Matlab"; }
+.python::before, div.language-python::before { content: "Python"; }
+.r::before, div.language-r::before { content: "R"; }
+.sql::before, div.language-sql::before { content: "SQL"; }
 
 // Tab panels are used on Setup pages to show instructions for different Operating Systems
 .tab-pane {
