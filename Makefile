@@ -121,7 +121,7 @@ HTML_DST = \
 
 ## * install-rmd-deps : Install R packages dependencies to build the RMarkdown lesson
 install-rmd-deps:
-	Rscript -e 'source(file.path("bin", "dependencies.R")); install_dependencies(identify_dependencies())'
+	@bin/install_r_deps.sh
 
 ## * lesson-md        : convert Rmarkdown files to markdown
 lesson-md : ${RMD_DST}
