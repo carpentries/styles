@@ -124,7 +124,7 @@ install-rmd-deps:
 	Rscript -e 'source(file.path("bin", "dependencies.R")); install_dependencies(identify_dependencies())'
 
 ## * lesson-md        : convert Rmarkdown files to markdown
-lesson-md    : ${RMD_DST}
+lesson-md : ${RMD_DST}
 
 _episodes/%.md: _episodes_rmd/%.Rmd install-rmd-deps
 	@mkdir -p _episodes
