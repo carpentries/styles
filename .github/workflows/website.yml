@@ -1,11 +1,10 @@
-name: Website
+name: Build website
 on:
   push:
     branches: gh-pages
   pull_request: []
 jobs:
   build-website:
-    name: Build lesson website
     if: github.repository != 'carpentries/styles'
     runs-on: ubuntu-latest
     defaults:
@@ -38,15 +37,49 @@ jobs:
 
       - name: Look for R-markdown files
         id: check-rmd
+        working-directory: lesson
         run: |
           echo "::set-output name=count::$(shopt -s nullglob; files=($(find . -iname '*.Rmd')); echo ${#files[@]})"
 
-      - name: Install R packages
+      - name: Set up R
+        if: steps.check-rmd.outputs.count != 0
+        uses: r-lib/actions/setup-r@master
+        with:
+          r-version: 'release'
+
+      - name: Install needed packages
         if: steps.check-rmd.outputs.count != 0
         run: |
-          mkdir -p ~/local/R_libs
-          echo 'R_LIBS_USER=~/local/R_libs/' > ~/.Renviron
-          Rscript -e "install.packages(c('knitr', 'stringr', 'checkpoint', 'ggplot2'), repos = 'https://cran.rstudio.com', dependencies = TRUE, lib='~/local/R_libs/')"
+          install.packages(c('remotes', 'rprojroot', 'renv', 'desc', 'rmarkdown', 'knitr'))
+        shell: Rscript {0}
+
+      - name: Query dependencies
+        if: steps.check-rmd.outputs.count != 0
+        working-directory: lesson
+        run: |
+          source('bin/dependencies.R')
+          deps <- identify_dependencies()
+          create_description(deps)
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        if: steps.check-rmd.outputs.count != 0
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      - name: Install system dependencies for R packages
+        if: steps.check-rmd.outputs.count != 0
+        working-directory: lesson
+        run: |
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "18.04"), sep = "\n")')
 
       - run: make site
       - run: make lesson-check
