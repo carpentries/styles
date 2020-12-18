@@ -14,7 +14,7 @@ jobs:
         lesson: [swcarpentry/shell-novice, datacarpentry/r-intro-geospatial, librarycarpentry/lc-git]
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             os-name: Ubuntu
           - os: macos-latest
             os-name: macOS
@@ -30,7 +30,7 @@ jobs:
       run:
         shell: bash # forces 'Git for Windows' on Windows
     env:
-      RSPM: 'https://packagemanager.rstudio.com/cran/__linux__/bionic/latest'
+      RSPM: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'
     steps:
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
@@ -93,10 +93,18 @@ jobs:
         with:
           r-version: 'release'
 
+      - name: Cache R packages
+        if: runner.os != 'Windows' && steps.check-rmd.outputs.count != 0
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
       - name: Install needed packages
         if: steps.check-rmd.outputs.count != 0
         run: |
-          install.packages(c('remotes', 'rprojroot', 'renv', 'desc', 'rmarkdown', 'knitr'))
+          install.packages(setdiff(c('remotes', 'rprojroot', 'renv', 'desc', 'rmarkdown', 'knitr')), rownames(installed.packages()))
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -109,14 +117,6 @@ jobs:
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
-
-      - name: Cache R packages
-        if: runner.os != 'Windows' && steps.check-rmd.outputs.count != 0
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Install system dependencies for R packages
         if: runner.os == 'Linux' && steps.check-rmd.outputs.count != 0
