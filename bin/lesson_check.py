@@ -59,6 +59,7 @@ P_INTERNAL_INCLUDE_LINK = re.compile(r'^{% include ([^ ]*) %}$')
 # What kinds of blockquotes are allowed?
 KNOWN_BLOCKQUOTES = {
     'callout',
+    'caution',
     'challenge',
     'checklist',
     'discussion',
