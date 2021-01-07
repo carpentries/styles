@@ -97,6 +97,7 @@ jobs:
         if: steps.check-rmd.outputs.count != 0
         run: |
           install.packages(c('remotes', 'rprojroot', 'renv', 'desc', 'rmarkdown', 'knitr'))
+          install.packages('stringi', repos = 'https://cloud.r-project.org')
         shell: Rscript {0}
 
       - name: Query dependencies
