@@ -55,6 +55,7 @@ jobs:
         if: steps.check-rmd.outputs.count != 0
         run: |
           install.packages(c('remotes', 'rprojroot', 'renv', 'desc', 'rmarkdown', 'knitr'))
+          install.packages('stringi', repos = 'https://cloud.r-project.org')
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -72,8 +73,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ matrix.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ matrix.os }}-${{ hashFiles('.github/R-version') }}-1-
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Install system dependencies for R packages
         if: steps.check-rmd.outputs.count != 0
