@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         lesson: [swcarpentry/shell-novice, datacarpentry/r-intro-geospatial, librarycarpentry/lc-git]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-20.04, macos-latest, windows-latest]
         include:
           - os: ubuntu-20.04
             os-name: Ubuntu
@@ -93,14 +93,6 @@ jobs:
         with:
           r-version: 'release'
 
-      - name: Cache R packages
-        if: runner.os != 'Windows' && steps.check-rmd.outputs.count != 0
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-
       - name: Install needed packages
         if: steps.check-rmd.outputs.count != 0
         run: |
@@ -118,6 +110,19 @@ jobs:
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
+      - name: Cache R packages
+        if: runner.os != 'Windows' && steps.check-rmd.outputs.count != 0
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      - name: Install stringi from source
+        if: runner.os == 'Linux' && steps.check-rmd.outputs.count != 0
+        run: install.packages('stringi', repos='https://cloud.r-project.org')
+        shell: Rscript {0}
+
       - name: Install system dependencies for R packages
         if: runner.os == 'Linux' && steps.check-rmd.outputs.count != 0
         working-directory: lesson
@@ -125,7 +130,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "18.04"), sep = "\n")')
+          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
 
       - run: make site
         working-directory: lesson
