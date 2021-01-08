@@ -118,6 +118,11 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
+      - name: Install stringi from source
+        if: runner.os == 'Linux' && steps.check-rmd.outputs.count != 0
+        run: install.packages('stringi', repos='https://cloud.r-project.org')
+        shell: Rscript {0}
+
       - name: Install system dependencies for R packages
         if: runner.os == 'Linux' && steps.check-rmd.outputs.count != 0
         working-directory: lesson
@@ -127,7 +132,5 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
 
-      - run: |
-          Rscript -e 'install.packages("stringi", repos = "https://cloud.r-project.org")'
-          make site
+      - run: make site
         working-directory: lesson
