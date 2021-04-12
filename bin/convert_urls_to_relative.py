@@ -56,7 +56,9 @@ def main(builddir="."):
                         path += "index.html"
 
                     # if we don't find the file something went wrong
-                    # TODO: Should this be fatal?
+                    # * A typo in the address
+                    # * A reference to a rendered file that wasn't created
+                    # * A path that isn't supposed to refer to a file (e.g. GitHub links)
                     if not os.path.isfile(path):
                         print(
                             "WARNING: attribute ", attrib,
@@ -65,6 +67,8 @@ def main(builddir="."):
                             " of file ", filename,
                             " references a missing file ", path, "",
                             sep="'")
+                        # TODO: For now we leave it unchanged. Should it be fatal instead?
+                        continue
 
                     new_path = os.path.relpath(path, os.path.dirname(filename))
 
