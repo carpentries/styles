@@ -50,9 +50,9 @@ jobs:
       - name: Install Python modules
         run: |
           if [[ $RUNNER_OS == macOS || $RUNNER_OS == Linux ]]; then
-            python3 -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests
+            python3 -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests lxml
           elif [[ $RUNNER_OS == Windows ]]; then
-            python -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests
+            python -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests lxml
           fi
 
       - name: Checkout the ${{ matrix.lesson }} lesson

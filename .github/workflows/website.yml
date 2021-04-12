@@ -33,7 +33,7 @@ jobs:
 
       - name: Install Python modules
         run: |
-          python3 -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests
+          python3 -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests lxml
 
       - name: Checkout the lesson
         uses: actions/checkout@master
