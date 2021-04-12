@@ -9,6 +9,7 @@ This is adapted from: https://ricostacruz.com/til/relative-paths-in-jekyll
   directly
 {% endcomment %}
 
+{% comment %}
 {% assign relative_root_path = '' %}
 
 {% assign last_char = page.url | slice: -1 %}
@@ -25,3 +26,15 @@ This is adapted from: https://ricostacruz.com/til/relative-paths-in-jekyll
 {% elsif depth == 3 %}{% assign relative_root_path = '../..' %}
 {% elsif depth == 4 %}{% assign relative_root_path = '../../..' %}
 {% endif %}
+{% endcomment %}
+
+{% comment %}
+The above code was used to convert links to relative paths
+to allow reading the lesson without an HTTP server
+(through the file:// protocol)
+
+This is now performed by bin/convert_urls_to_relative.py
+so we can rely on site.baseurl for served websites
+{% endcomment %}
+
+{% assign relative_root_path = site.baseurl %}
