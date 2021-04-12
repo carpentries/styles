@@ -47,6 +47,7 @@ serve : lesson-md
 ## * site             : build website but do not run a server
 site : lesson-md
 	${JEKYLL} build
+	${PYTHON} bin/convert_urls_to_relative.py ${DST}
 
 ## * docker-serve     : use Docker to serve the site
 docker-serve :
