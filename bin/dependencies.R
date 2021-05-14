@@ -72,7 +72,7 @@ identify_dependencies <- function() {
 
 create_description <- function(required_pkgs) {
   d <- desc::description$new("!new")
-  d$set_deps(data.frame(type = "Imports", package = required_packages, version = "*"))
+  d$set_deps(data.frame(type = "Imports", package = required_pkgs, version = "*"))
   d$write("DESCRIPTION")
   # We have to write the description twice to get the hidden dependencies
   # because renv only considers explicit dependencies.
