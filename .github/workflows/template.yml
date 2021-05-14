@@ -140,7 +140,7 @@ jobs:
         working-directory: lesson
         run: |
           source('bin/dependencies.R')
-          install_required_packages()
+          install_required_packages(.libPaths()[1])
         shell: Rscript {0}
 
       - name: Query dependencies
