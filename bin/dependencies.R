@@ -72,7 +72,16 @@ identify_dependencies <- function() {
 
 create_description <- function(required_pkgs) {
   d <- desc::description$new("!new")
-  lapply(required_pkgs, function(x) d$set_dep(x))
+  d$set_deps(data.frame(type = "Imports", package = required_packages, version = "*"))
+  d$write("DESCRIPTION")
+  # We have to write the description twice to get the hidden dependencies
+  # because renv only considers explicit dependencies.
+  #
+  # This is needed because some of the hidden dependencis will require system
+  # libraries to be configured.
+  suppressMessages(repo <- BiocManager::repositories())
+  deps <- remotes::dev_package_deps(dependencies = TRUE, repos = repo)
+  d$set_deps(data.frame(type = "Imports", package = deps, version = "*"))
   d$write("DESCRIPTION")
 }
 
@@ -82,7 +91,7 @@ install_dependencies <- function(required_pkgs, ...) {
   on.exit(reset_repos(), add = TRUE)
 
   create_description(required_pkgs)
-  on.exit(file.remove("DESCRIPTION"))
+  on.exit(file.remove("DESCRIPTION"), add = TRUE)
   remotes::install_deps(dependencies = TRUE, ...)
 
   if (require("knitr") && packageVersion("knitr") < '1.9.19') {
