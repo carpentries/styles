@@ -80,7 +80,7 @@ create_description <- function(required_pkgs) {
   # This is needed because some of the hidden dependencis will require system
   # libraries to be configured.
   suppressMessages(repo <- BiocManager::repositories())
-  deps <- remotes::dev_package_deps(dependencies = TRUE, repos = repo)
+  deps <- remotes::dev_package_deps(dependencies = TRUE, repos = repo)$package
   d$set_deps(data.frame(type = "Imports", package = deps, version = "*"))
   d$write("DESCRIPTION")
 }
