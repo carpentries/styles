@@ -5,7 +5,8 @@ install_required_packages <- function(lib = NULL, repos = getOption("repos", def
   }
 
   message("lib paths: ", paste(lib, collapse = ", "))
-  required_pkgs <- c("rprojroot", "desc", "remotes", "renv", "BiocManager")
+  # Note: RMarkdown is needed for renv to detect packages in Rmd documents.
+  required_pkgs <- c("rprojroot", "desc", "remotes", "renv", "BiocManager", "rmarkdown")
   installed_pkgs <- rownames(installed.packages(lib.loc = lib))
   missing_pkgs <- setdiff(required_pkgs, installed_pkgs)
 
