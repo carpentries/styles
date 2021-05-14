@@ -138,8 +138,8 @@ jobs:
       - name: Install needed packages
         if: steps.check-rmd.outputs.count != 0
         run: |
-          packages = setdiff(c('remotes', 'rprojroot', 'renv', 'desc', 'rmarkdown', 'knitr'), rownames(installed.packages()))
-          install.packages(packages, repo="https://cran.rstudio.com/")
+          source('bin/dependencies.R')
+          install_required_packages()
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -149,6 +149,7 @@ jobs:
           source('bin/dependencies.R')
           deps <- identify_dependencies()
           create_description(deps)
+          use_bioc_repos()
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}

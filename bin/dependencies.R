@@ -5,7 +5,7 @@ install_required_packages <- function(lib = NULL, repos = getOption("repos", def
   }
 
   message("lib paths: ", paste(lib, collapse = ", "))
-  required_pkgs <- c("rprojroot", "desc", "remotes", "renv")
+  required_pkgs <- c("rprojroot", "desc", "remotes", "renv", "BiocManager")
   installed_pkgs <- rownames(installed.packages(lib.loc = lib))
   missing_pkgs <- setdiff(required_pkgs, installed_pkgs)
 
@@ -29,9 +29,34 @@ find_root <- function() {
   root
 }
 
+# set the BiocManager repositories and return a function that resets the default
+# repositories.
+#
+# @example
+# bioc_repos_example <- function() {
+#   message("User repos")
+#   as.data.frame(getOption("repos"))
+#   reset_repos <- use_bioc_repos()
+#   on.exit(reset_repos())
+#   message("Bioc repos")
+#   as.data.frame(getOption("repos"))
+# }
+# bioc_repos_example()
+# as.data.frame(getOption("repos")
+use_bioc_repos <- function() {
+  repos <- getOption("repos")
+  suppressMessages(options(repos = BiocManager::repositories()))
+  function() {
+    options(repos = repos)
+  }
+}
+
 identify_dependencies <- function() {
 
   root <- find_root()
+
+  reset_repos <- use_bioc_repos()
+  on.exit(reset_repos(), add = TRUE)
 
   required_pkgs <- unique(c(
     ## Packages for episodes
@@ -50,6 +75,9 @@ create_description <- function(required_pkgs) {
 }
 
 install_dependencies <- function(required_pkgs, ...) {
+
+  reset_repos <- use_bioc_repos()
+  on.exit(reset_repos(), add = TRUE)
 
   create_description(required_pkgs)
   on.exit(file.remove("DESCRIPTION"))
