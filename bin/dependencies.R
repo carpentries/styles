@@ -1,11 +1,11 @@
 install_required_packages <- function(lib = NULL, repos = getOption("repos", default = c(CRAN = "https://cran.rstudio.com/"))) {
 
   if (is.null(lib)) {
-    lib <- .libPaths()
+    lib <- .libPaths()[[1]]
   }
 
   message("lib paths: ", paste(lib, collapse = ", "))
-  required_pkgs <- c("rprojroot", "desc", "remotes", "renv", "BiocManager", "rmarkdown")
+  required_pkgs <- c("rprojroot", "desc", "remotes", "renv", "BiocManager")
   installed_pkgs <- rownames(installed.packages(lib.loc = lib))
   missing_pkgs <- setdiff(required_pkgs, installed_pkgs)
 
