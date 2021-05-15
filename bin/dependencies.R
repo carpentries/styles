@@ -59,12 +59,14 @@ identify_dependencies <- function() {
 
   reset_repos <- use_bioc_repos()
   on.exit(reset_repos(), add = TRUE)
+  eps <- file.path(root, "_episodes_rmd")
+  bin <- file.path(root, "bin")
 
   required_pkgs <- unique(c(
     ## Packages for episodes
-    renv::dependencies(file.path(root, "_episodes_rmd"), progress = FALSE, error = "ignore")$Package,
+    renv::dependencies(eps, progress = FALSE, error = "ignored")$Package,
     ## Packages for tools
-    renv::dependencies(file.path(root, "bin"), progress = FALSE, error = "ignore")$Package
+    renv::dependencies(bin, progress = FALSE, error = "ignored")$Package
   ))
 
   required_pkgs
