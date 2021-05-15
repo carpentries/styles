@@ -83,7 +83,7 @@ create_description <- function(required_pkgs) {
   # libraries to be configured.
   suppressMessages(repo <- BiocManager::repositories())
   deps <- remotes::dev_package_deps(dependencies = TRUE, repos = repo)
-  deps <- deps$package[dep$diff < 0]
+  deps <- deps$package[deps$diff < 0]
   d$set_deps(data.frame(type = "Imports", package = deps, version = "*"))
   d$write("DESCRIPTION")
 }
