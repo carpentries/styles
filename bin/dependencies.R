@@ -84,7 +84,7 @@ create_description <- function(required_pkgs) {
   suppressMessages(repo <- BiocManager::repositories())
   deps <- remotes::dev_package_deps(dependencies = TRUE, repos = repo)
   deps <- deps$package[deps$diff < 0]
-  if (nrow(deps)) {
+  if (length(deps)) {
     # only create new DESCRIPTION file if there are dependencies to install
     d$set_deps(data.frame(type = "Imports", package = deps, version = "*"))
     d$write("DESCRIPTION")
