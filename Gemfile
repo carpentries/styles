@@ -48,6 +48,8 @@ group :jekyll_plugins do
     gem 'jekyll-readme-index', '>= 0.3.0'
     gem 'jekyll-default-layout', '>= 0.1.4'
     gem 'jekyll-titles-from-headings', '>= 0.5.3'
+    # Extra dependency that allows accessing ENV variables in other CI environments
+    gem 'jekyll-environment-variables', '>= 1.0.1'
   end
 end
 
