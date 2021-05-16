@@ -118,11 +118,14 @@ jobs:
           # mount _site as the expected output directory
           # Chown is necessary only to ensure the files are owned by
           # the user outside the container
+          # NOTE when using gitlab-runner CI_REPOSITORY_URL is set
+          # to /path/to/repo regardless of --env passed below.
+          # When running in GitLab CI it will be set to the repo URL
           ./gitlab-runner exec docker pages \
             --docker-volumes "$(pwd)/_site:/public" \
             --env "GITLAB_CI=true" \
             --env "CI_PROJECT_NAME=lesson-example" \
-            --env "CI_DEFAULT_BRANCH=gh-pages" \
+            --env "CI_DEFAULT_BRANCH=my-custom-branch" \
             --env "CI_REPOSITORY_URL=https://github.com/${{ matrix.lesson }}" \
             --env "CI_PAGES_URL=https://pages.github.com" \
             --env "CI_PROJECT_TITLE=${{ matrix.lesson-name }}" \
@@ -131,6 +134,10 @@ jobs:
 
       - name: List generated files
         run: ls -l _site
+        working-directory: lesson
+
+      - name: Check that CI_DEFAULT_BRANCH propagated correctly
+        run: grep '/edit/my-custom-branch/index\.md' _site/index.html
         working-directory: lesson
 
       - run: make lesson-check-all
