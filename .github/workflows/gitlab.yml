@@ -1,0 +1,137 @@
+name: GitLab Test template
+on:
+  push:
+    branches: gh-pages
+  pull_request:
+jobs:
+  check-template:
+    name: ${{ matrix.lesson-name }} (${{ matrix.os-name }})
+    if: github.repository == 'carpentries/styles'
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        lesson: [carpentries/lesson-example]
+        os: [ubuntu-20.04]
+        experimental: [false]
+        include:
+          - os: ubuntu-20.04
+            os-name: Linux
+          - lesson: carpentries/lesson-example
+            lesson-name: (CP) Lesson Example
+            experimental: false
+            os: ubuntu-20.04
+            os-name: Linux
+    defaults:
+      run:
+        shell: bash  # forces 'Git for Windows' on Windows
+    env:
+      RSPM: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'
+    steps:
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+          bundler-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install GitHub Pages, Bundler, and kramdown gems
+        run: |
+          gem install github-pages bundler kramdown kramdown-parser-gfm
+
+      - name: Install Python modules
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel pyyaml==5.3.1 requests
+
+      - name: Checkout the ${{ matrix.lesson }} lesson
+        uses: actions/checkout@master
+        with:
+          repository: ${{ matrix.lesson }}
+          path: lesson
+          fetch-depth: 0
+
+      - name: Sync lesson with carpentries/styles
+        working-directory: lesson
+        run: |
+          echo "::group::Fetch Styles"
+          if [[ -n "${{ github.event.pull_request.number }}" ]]
+          then
+            ref="refs/pull/${{ github.event.pull_request.number }}/head"
+          else
+            ref="gh-pages"
+          fi
+
+          git config --global user.email "team@carpentries.org"
+          git config --global user.name "The Carpentries Bot"
+
+          git remote add styles https://github.com/carpentries/styles.git
+          git fetch styles $ref:styles-ref
+          echo "::endgroup::"
+          echo "::group::Synchronize Styles"
+          # Sync up only if necessary
+          if [[ $(git rev-list --count HEAD..styles-ref) != 0 ]]
+          then
+
+            # The merge command below might fail for lessons that use remote theme
+            # https://github.com/carpentries/carpentries-theme
+            echo "Testing merge using recursive strategy, accepting upstream changes without committing"
+            if ! git merge -s recursive -Xtheirs --no-commit styles-ref
+            then
+
+              # Remove "deleted by us, unmerged" files from the staging area.
+              # these are the files that were removed from the lesson
+              # but are still present in the carpentries/styles repo
+              echo "Removing previously deleted files"
+              git rm $(git diff --name-only --diff-filter=DU)
+
+              # If there are still "unmerged" files,
+              # let's raise an error and look into this more closely
+              if [[ -n $(git diff --name-only --diff-filter=U) ]]
+              then
+                echo "There were unmerged files in ${{ matrix.lesson-name }}:"
+                echo "$(git diff --compact-summary --diff-filter=U)"
+                exit 1
+              fi
+            fi
+
+            echo "Committing changes"
+            git commit -m "Sync lesson with carpentries/styles"
+          fi
+          echo "::endgroup::"
+
+      - name: Download gitlab-runner
+        working-directory: lesson
+        run: |
+          wget -O gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+          chmod +x gitlab-runner
+
+      - name: Build carpentries example lesson using gitlab-runner
+        working-directory: lesson
+        run: |
+          # GitLab expects the final folder to be "public"
+          # gitlab-runner runs a docker container on which we
+          # mount _site as the expected output directory
+          # Chown is necessary only to ensure the files are owned by
+          # the user outside the container
+          ./gitlab-runner exec docker pages \
+            --docker-volumes "$(pwd)/_site:/public" \
+            --env "GITLAB_CI=true" \
+            --env "CI_PROJECT_NAME=lesson-example" \
+            --env "CI_DEFAULT_BRANCH=gh-pages" \
+            --env "CI_REPOSITORY_URL=https://github.com/${{ matrix.lesson }}" \
+            --env "CI_PAGES_URL=https://pages.github.com" \
+            --env "CI_PROJECT_TITLE=${{ matrix.lesson-name }}" \
+            --env "CI_MERGE_REQUEST_SOURCE_BRANCH_NAME=patch-1" \
+            --post-build-script "rm -rf /public/* && cp -R public/* /public && chown -R $(id -u):$(id -g) /public"
+
+      - name: List generated files
+        run: ls -l _site
+        working-directory: lesson
+
+      - run: make lesson-check-all
+        working-directory: lesson
