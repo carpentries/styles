@@ -19,7 +19,8 @@
   {% assign description = description | append: "..." %}
 {% endif %}
 <meta property="og:description" content="{{ description }}" />
-<meta property="og:image" content="{{ site.url }}/assets/favicons/cp/mstile-310x310.png" />
+{% assign favicon_url = relative_root_path | append: '/assets/favicons/' | append: site.carpentry  %}
+<meta property="og:image" content="{{ favicon_url }}/mstile-310x310.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:alt" content="Carpentries' logo" />
 <meta name="twitter:card" content="summary" />
