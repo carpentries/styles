@@ -9,6 +9,7 @@ DST=_site
 # Find Docker
 DOCKER := $(shell which docker 2>/dev/null)
 
+# Find Bundler
 BUNDLE := $(shell which bundle 2>/dev/null)
 
 # Check Python 3 is installed and determine if it's called via python3 or python
@@ -188,25 +189,26 @@ endif
 
 bundler :
 ifeq (, $(BUNDLE))
-	$(error Please install Bundler using 'gem install bundler')
+	$(error Please install Bundler using 'gem install --user-install bundler')
 else
 	@:
 endif
+
+.bundle/config : bundler
+	@bundle config set --local path '.vendor/bundle'
 
 ## * bundle           : install Ruby gems (required for building lesson website locally)
 bundle : .vendor/bundle
 	@:
 
-.vendor/bundle: Gemfile.lock bundler
+.vendor/bundle: Gemfile.lock .bundle/config bundler
 	$(info Installing Ruby gems)
-	@bundle config set --local path '.vendor/bundle'
 	@bundle install
 	@touch .vendor/bundle
 
 ## * update-bundle    : update Ruby gems (required for building lesson website locally)
-update-bundle : Gemfile.lock bundler
+update-bundle : Gemfile.lock .bundle/config bundler
 	$(info Updating Ruby gems)
-	@bundle config set --local path '.vendor/bundle'
 	@bundle update --quiet
 	@touch .vendor/bundle
 
