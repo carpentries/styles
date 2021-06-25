@@ -47,7 +47,7 @@ endif
 
 ## * serve            : render website and run a local server
 serve : lesson-md index.md bundler .vendor/bundle
-	@bundle exec jekyll serve
+	@$(BUNDLE) exec jekyll serve
 
 ## * site             : build website but do not run a server
 site : update-bundle site-offline
@@ -55,7 +55,7 @@ site : update-bundle site-offline
 
 ## * site-offline     : same as 'site' but doesn't update Ruby gems
 site-offline : lesson-md index.md bundler .vendor/bundle
-	@bundle exec jekyll build
+	@$(BUNDLE) exec jekyll build
 
 ## * docker-serve     : use Docker to serve the site
 docker-serve :
@@ -195,7 +195,7 @@ else
 endif
 
 .bundle/config : bundler
-	@bundle config set --local path '.vendor/bundle'
+	@$(BUNDLE) config set --local path '.vendor/bundle'
 
 ## * bundle           : install Ruby gems (required for building lesson website locally)
 bundle : .vendor/bundle
@@ -203,13 +203,13 @@ bundle : .vendor/bundle
 
 .vendor/bundle: Gemfile.lock .bundle/config bundler
 	$(info Installing Ruby gems)
-	@bundle install
+	@$(BUNDLE) install
 	@touch .vendor/bundle
 
 ## * update-bundle    : update Ruby gems (required for building lesson website locally)
 update-bundle : Gemfile.lock .bundle/config bundler
 	$(info Updating Ruby gems)
-	@bundle update --quiet
+	@$(BUNDLE) update --quiet
 	@touch .vendor/bundle
 
 Gemfile:
@@ -220,7 +220,7 @@ else
 endif
 
 Gemfile.lock: Gemfile bundler
-	@bundle lock --update
+	@$(BUNDLE) lock --update
 
 index.md :
 ifeq (, $(wildcard index.md))
