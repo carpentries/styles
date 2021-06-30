@@ -45,23 +45,22 @@ endif
 .PHONY: site site-offline serve serve-offline docker-serve repo-check clean clean-rmd
 
 ## * serve            : render website and run a local server
-serve : update-bundle serve-offline
+serve : update-bundle lesson-md index.md
 	$(info ==> $@ [$^])
-	@:
+	@$(BUNDLE) exec jekyll serve
 
 ## * site             : build website but do not run a server
-site : update-bundle site-offline
+site : update-bundle lesson-md index.md
 	$(info ==> $@ [$^])
-	@:
+	@$(BUNDLE) exec jekyll build
 
 ## * serve-offline    : same as 'serve' but don't update Ruby gems
-serve-offline : lesson-md index.md bundler .vendor/bundle
+serve-offline : lesson-md index.md | bundler check-bundle
 	$(info ==> $@ [$^])
 	@$(BUNDLE) exec jekyll serve
 
 ## * site-offline     : same as 'site' but don't update Ruby gems
-site-offline : lesson-md index.md bundler .vendor/bundle
-	$(info ==> $@ [$^])
+site-offline : lesson-md index.md | bundler check-bundle
 	@$(BUNDLE) exec jekyll build
 
 
@@ -195,7 +194,7 @@ lesson-fixme :
 ## IV. Auxililary (plumbing) commands
 ## =================================================
 
-.PHONY : commands python bundler bundle update-bundle
+.PHONY : commands python bundler bundle update-bundle check-bundle
 
 ## * commands         : show all commands
 commands :
@@ -221,8 +220,8 @@ endif
 	$(info ==> $@ [$^])
 	@$(BUNDLE) config set --local path '.vendor/bundle'
 
-## * install-bundle   : install Ruby gems
-install-bundle : .vendor/bundle
+## * bundle   : install Ruby gems
+bundle : .vendor/bundle
 	$(info ==> $@ [$^])
 	@:
 
@@ -230,6 +229,14 @@ install-bundle : .vendor/bundle
 	$(info ==> $@ [$^])
 	@$(BUNDLE) install --quiet
 	@touch .vendor/bundle
+
+check-bundle:
+ifeq (, $(wildcard .vendor/bundle))
+	$(error Required Ruby gems not found. Install them with 'make bundle')
+else
+	@:
+endif
+
 
 ## * update-bundle    : update Ruby gems
 update-bundle : Gemfile.lock .bundle/config | bundler
