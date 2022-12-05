@@ -1,14 +1,15 @@
-## ========================================
-## Commands for both workshop and lesson websites.
+## =================================================
 
 # Settings
 MAKEFILES=Makefile $(wildcard *.mk)
-JEKYLL=bundle config set --local path .vendor/bundle && bundle install && bundle update && bundle exec jekyll
 PARSER=bin/markdown_ast.rb
 DST=_site
 
 # Find Docker
 DOCKER := $(shell which docker 2>/dev/null)
+
+# Find Bundler
+BUNDLE := $(shell which bundle 2>/dev/null)
 
 # Check Python 3 is installed and determine if it's called via python3 or python
 # (https://stackoverflow.com/a/4933395)
@@ -41,18 +42,31 @@ endif
 ## I. Commands for both workshop and lesson websites
 ## =================================================
 
-.PHONY: site docker-serve repo-check clean clean-rmd
+.PHONY: site site-offline serve serve-offline docker-serve repo-check clean clean-rmd
 
 ## * serve            : render website and run a local server
-serve : lesson-md index.md
-	${JEKYLL} serve
+serve : update-bundle lesson-md index.md
+	$(info ==> $@ [$^])
+	@$(BUNDLE) exec jekyll serve
 
 ## * site             : build website but do not run a server
-site : lesson-md index.md
-	${JEKYLL} build
+site : update-bundle lesson-md index.md
+	$(info ==> $@ [$^])
+	@$(BUNDLE) exec jekyll build
 
-## * docker-serve     : use Docker to serve the site
+## * serve-offline    : same as 'serve' but don't update Ruby gems
+serve-offline : lesson-md index.md | bundler check-bundle
+	$(info ==> $@ [$^])
+	@$(BUNDLE) exec jekyll serve
+
+## * site-offline     : same as 'site' but don't update Ruby gems
+site-offline : lesson-md index.md | bundler check-bundle
+	@$(BUNDLE) exec jekyll build
+
+
+## * docker-serve     : use Docker to serve the website
 docker-serve :
+	$(info ==> $@)
 ifeq (, $(DOCKER))
 	$(error Your system does not appear to have Docker installed)
 else
@@ -68,22 +82,25 @@ endif
 
 ## * repo-check       : check repository settings
 repo-check : python
+	$(info ==> $@ [$^])
 	@${PYTHON} bin/repo_check.py -s .
 
 ## * clean            : clean up junk files
 clean :
+	$(info ==> $@)
 	@rm -rf ${DST}
 	@rm -rf .sass-cache
 	@rm -rf bin/__pycache__
 	@rm -rf .vendor
 	@rm -rf .bundle
-	@rm -f Gemfile.lock
+	@git ls-files --error-unmatch Gemfile.lock 2>/dev/null || rm -f Gemfile.lock
 	@find . -name .DS_Store -exec rm {} \;
 	@find . -name '*~' -exec rm {} \;
 	@find . -name '*.pyc' -exec rm {} \;
 
 ## * clean-rmd        : clean intermediate R files (that need to be committed to the repo)
 clean-rmd :
+	$(info ==> $@)
 	@rm -rf ${RMD_DST}
 	@rm -rf fig/rmd-*
 
@@ -95,7 +112,8 @@ clean-rmd :
 .PHONY : workshop-check
 
 ## * workshop-check   : check workshop homepage
-workshop-check : python
+workshop-check : python index.html
+	$(info ==> $@ [$^])
 	@${PYTHON} bin/workshop_check.py .
 
 
@@ -131,29 +149,37 @@ HTML_DST = \
 
 ## * install-rmd-deps : Install R packages dependencies to build the RMarkdown lesson
 install-rmd-deps:
+	$(info ==> $@)
 	@${SHELL} bin/install_r_deps.sh
 
 ## * lesson-md        : convert Rmarkdown files to markdown
 lesson-md : ${RMD_DST}
+	$(info ==> $@ [$^])
+	@:
 
 _episodes/%.md: _episodes_rmd/%.Rmd install-rmd-deps
+	$(info ==> $@ [$^])
 	@mkdir -p _episodes
 	@$(SHELL) bin/knit_lessons.sh $< $@
 
 ## * lesson-check     : validate lesson Markdown
 lesson-check : python lesson-fixme
+	$(info ==> $@ [$^])
 	@${PYTHON} bin/lesson_check.py -s . -p ${PARSER} -r _includes/links.md
 
 ## * lesson-check-all : validate lesson Markdown, checking line lengths and trailing whitespace
 lesson-check-all : python
+	$(info ==> $@ [$^])
 	@${PYTHON} bin/lesson_check.py -s . -p ${PARSER} -r _includes/links.md -l -w --permissive
 
 ## * unittest         : run unit tests on checking tools
 unittest : python
+	$(info ==> $@ [$^])
 	@${PYTHON} bin/test_lesson_check.py
 
 ## * lesson-files     : show expected names of generated files for debugging
 lesson-files :
+	$(info ==> $@)
 	@echo 'RMD_SRC:' ${RMD_SRC}
 	@echo 'RMD_DST:' ${RMD_DST}
 	@echo 'MARKDOWN_SRC:' ${MARKDOWN_SRC}
@@ -161,28 +187,71 @@ lesson-files :
 
 ## * lesson-fixme     : show FIXME markers embedded in source files
 lesson-fixme :
+	$(info ==> $@)
 	@grep --fixed-strings --word-regexp --line-number --no-messages FIXME ${MARKDOWN_SRC} || true
 
 ##
 ## IV. Auxililary (plumbing) commands
 ## =================================================
 
-.PHONY : commands python
+.PHONY : commands python bundler bundle update-bundle check-bundle
 
-## * commands         : show all commands.
+## * commands         : show all commands
 commands :
 	@sed -n -e '/^##/s|^##[[:space:]]*||p' $(MAKEFILE_LIST)
 
 python :
+	$(info ==> $@)
 ifeq (, $(PYTHON))
 	$(error $(PYTHON_NOTE))
 else
 	@:
 endif
 
-index.md :
-ifeq (, $(wildcard index.md))
-	$(error index.md not found)
+bundler :
+	$(info ==> $@)
+ifeq (, $(BUNDLE))
+	$(error Please install Bundler using 'gem install --user-install bundler')
+else
+	@:
+endif
+
+.bundle/config : | bundler
+	$(info ==> $@ [$^])
+	@$(BUNDLE) config set --local path '.vendor/bundle'
+
+## * bundle   : install Ruby gems
+bundle : .vendor/bundle
+	$(info ==> $@ [$^])
+	@:
+
+.vendor/bundle: Gemfile.lock .bundle/config | bundler
+	$(info ==> $@ [$^])
+	@$(BUNDLE) install --quiet
+	@touch .vendor/bundle
+
+check-bundle:
+ifeq (, $(wildcard .vendor/bundle))
+	$(error Required Ruby gems not found. Install them with 'make bundle')
+else
+	@:
+endif
+
+
+## * update-bundle    : update Ruby gems
+update-bundle : Gemfile.lock .bundle/config | bundler
+	$(info ==> $@ [$^])
+	@$(BUNDLE) update --quiet
+	@touch .vendor/bundle
+
+Gemfile.lock: Gemfile | bundler
+	$(info ==> $@ [$^])
+	@$(BUNDLE) lock --update
+
+index.md index.html Gemfile :
+	$(info ==> $@)
+ifeq (, $(wildcard $@))
+	$(error $@ not found)
 else
 	@:
 endif
