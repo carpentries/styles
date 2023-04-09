@@ -1,0 +1,30 @@
+name: Labels
+on:
+  schedule:
+    - cron: '0 12/24 * * 1' #  ~> every Monday at 12:00 UTC
+  push:
+    branches: gh-pages
+jobs:
+  check-labels:
+    name: Check repository labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Python modules
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel
+          python3 -m pip install pyyaml==5.3.1
+          python3 -m pip install requests
+
+      - name: Checkout the lesson
+        uses: actions/checkout@master
+
+      - name: Check lesson labels
+        run: |
+          git remote rename origin upstream
+          make repo-check
