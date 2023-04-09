@@ -1,0 +1,22 @@
+---
+image:
+  name: carpentries/lesson-docker:latest
+  entrypoint: [""]
+
+variables:
+  LC_ALL: "C.UTF-8"
+  MAKEFLAGS: "-j 8"
+  # Override the Gemfile used in the lesson-docker image
+  # with the one included in the current repository
+  BUNDLE_GEMFILE: Gemfile
+
+pages:
+  stage: deploy
+  script:
+    - make site
+    - mv _site public
+  artifacts:
+    paths:
+      - public
+  only:
+    - gh-pages

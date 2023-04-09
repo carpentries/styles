@@ -1,4 +1,12 @@
 {% comment %}
+This file was initially used to provide access to GitHub variables
+available when rendering websites through GitHub Pages.
+It has since then been expanded to also work with GitLab Pages,
+although with some limitations due to platform differences.
+Particularly, the variable "repo_info" is set to false when rendering
+through GitLab Pages. The value false is the same set by github-pages
+plugin when GitHub's API cannot be reached.
+
 When rendering websites locally, `site.github.url` doesn't get resolved properly
 unless a GitHub Personal Access Token is set up and available in the
 environment. This leads to warnings and errors when trying to serve the site
@@ -7,7 +15,23 @@ set to `development` when rendering the site locally, and set to `production` on
 GitHub where `site.github.url` is defined.
 {% endcomment %}
 
-{% if jekyll.environment == "production" %}
+{% if site.env.GITLAB_CI %}
+
+{% comment %}
+This block applies when running in a GitLab CI environment
+See https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+for GitLab CI specific variables.
+{% endcomment %}
+
+{% assign repo_name = site.env.CI_PROJECT_NAME %}
+{% assign repo_info = false %}
+{% assign default_branch = site.env.CI_DEFAULT_BRANCH %}
+{% assign repo_url = site.env.CI_REPOSITORY_URL %}
+{% assign search_domain_url = site.env.CI_PAGES_URL %}
+{% assign project_title = site.env.CI_PROJECT_TITLE %}
+{% assign source_branch = site.env.CI_MERGE_REQUEST_SOURCE_BRANCH_NAME %}
+
+{% elsif jekyll.environment == "production" and site.github %}
 
 {% comment %}
 First, get the name of the repository
