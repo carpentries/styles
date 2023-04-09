@@ -89,6 +89,10 @@ collections:
     output: true
     permalink: /:path/index.html
 
+# avoid titles being converted to headings (https://github.com/carpentries/styles/issues/633)
+titles_from_headings:
+  enabled: false
+
 # Set the default layout for things in the episodes collection.
 defaults:
   - values:
